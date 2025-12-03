@@ -1,0 +1,34 @@
+<app-header />
+<div class="wrapper">
+  <div class="content">
+    <h1>Enter Your Email Verification Code</h1>
+
+    <p class="sub">
+      Please enter the 6-digit verification code sent<br />
+      to DemoCorp@gmail.com
+    </p>
+
+    <!-- OTP INPUT -->
+    <app-otp-input (codeChange)="onCodeChanged($event)"></app-otp-input>
+
+    <!-- COUNTER -->
+    <div class="counter">
+      {{ counter | number : '1.0' }}
+    </div>
+
+    <!-- RESEND -->
+    <div class="resend">
+      Didn't receive a code?
+      <button [disabled]="!canResend" (click)="resendCode()" [class.enabled]="canResend">
+        Resend Code
+      </button>
+    </div>
+
+    <!-- NEXT BUTTON -->
+    <button class="next-btn" [disabled]="currentCode !== CORRECT_CODE" (click)="submit()">
+      Next
+    </button>
+  </div>
+</div>
+
+<app-toast />

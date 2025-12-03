@@ -1,0 +1,29 @@
+<app-header />
+
+<div class="create-page">
+  <div class="create-page__container">
+    <div class="create-page__logo">m</div>
+
+    <h1 class="create-page__title">
+      Apply for Your MyMonty <br />
+      Business Account
+    </h1>
+
+    <p class="create-page__subtitle">Welcome! Please enter your details</p>
+
+    <form (ngSubmit)="submit()" [formGroup]="form">
+      <app-email-input [control]="form.controls.email" />
+      <app-primary-button
+        label="Create Your Account"
+        [disabled]="form.invalid"
+        [routerLink]="['/verify-email']"
+      />
+    </form>
+
+    <app-disclaimer />
+
+    @if(form.valid){
+    <app-verify-email></app-verify-email>
+    }
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.email-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+
+  label {
+    font-size: 14px;
+    color: #444;
+  }
+
+  input {
+    padding: 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+}

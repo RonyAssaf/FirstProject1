@@ -1,0 +1,30 @@
+.otp-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+input {
+  width: 48px;
+  height: 58px;
+  font-size: 28px;
+  text-align: center;
+  border: 2px solid #d0d7e2;
+  border-radius: 10px;
+  outline: none;
+  transition: border 0.2s, color 0.2s;
+
+  &:focus {
+    border-color: #000;
+  }
+
+  &.correct {
+    border-color: blue;
+    color: blue;
+  }
+
+  &.incorrect {
+    border-color: red;
+    color: red;
+  }
+}

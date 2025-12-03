@@ -1,0 +1,3 @@
+<div class="toast" *ngIf="toast.toast$ | async as t" [class.show]="t.visible">
+  {{ t.message }}
+</div>

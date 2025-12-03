@@ -1,0 +1,13 @@
+<div class="otp-container">
+  <input
+    #otpBox
+    maxlength="1"
+    *ngFor="let v of values; let i = index; trackBy: trackByIndex"
+    type="text"
+    inputmode="numeric"
+    [value]="values[i]"
+    (input)="onInput($event, i)"
+    (keydown)="onKeyDown($event, i)"
+    [ngClass]="getStatus(i)"
+  />
+</div>
