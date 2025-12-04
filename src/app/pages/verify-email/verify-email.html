@@ -8,15 +8,12 @@
       to DemoCorp@gmail.com
     </p>
 
-    <!-- OTP INPUT -->
     <app-otp-input (codeChange)="onCodeChanged($event)"></app-otp-input>
 
-    <!-- COUNTER -->
     <div class="counter">
       {{ counter | number : '1.0' }}
     </div>
 
-    <!-- RESEND -->
     <div class="resend">
       Didn't receive a code?
       <button [disabled]="!canResend" (click)="resendCode()" [class.enabled]="canResend">
@@ -24,7 +21,6 @@
       </button>
     </div>
 
-    <!-- NEXT BUTTON -->
     <button class="next-btn" [disabled]="currentCode !== CORRECT_CODE" (click)="submit()">
       Next
     </button>

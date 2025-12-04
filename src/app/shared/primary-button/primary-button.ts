@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 })
 export class PrimaryButton {
   @Input() label = '';
-  @Input() disabled = false;
+  @Input() disabled = true;
 }

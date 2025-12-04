@@ -1,20 +1,15 @@
-import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, signal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import 'primeicons/primeicons.css';
+
 import { Header } from '../../core/header/header';
-import { PrimaryButton } from '../../shared/primary-button/primary-button';
 
 @Component({
   selector: 'app-create-password',
   standalone: true,
-  imports: [ReactiveFormsModule, Header, PrimaryButton],
+  imports: [ReactiveFormsModule, CommonModule, Header],
   templateUrl: './create-password.html',
   styleUrls: ['./create-password.scss'],
 })
@@ -26,38 +21,54 @@ export class CreatePasswordComponent {
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
-      password: this.fb.control<string | null>('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.pattern(/(?=.*[A-Z])/),
-          Validators.pattern(/(?=.*[a-z])/),
-          Validators.pattern(/(?=.*\d)/),
-          Validators.pattern(/(?=.[@$!%?&])/),
-        ],
-      }),
+      password: this.fb.control<string | null>(''),
       confirmPassword: this.fb.control<string | null>(''),
     });
   }
+  isChecked = signal(false);
 
   get password() {
     return this.form.controls.password;
   }
-
   get confirmPassword() {
     return this.form.controls.confirmPassword;
   }
 
-  passwordsMatch(): boolean {
+  hasMinLength() {
+    return (this.password.value?.length ?? 0) >= 8;
+  }
+  hasUppercase() {
+    return /[A-Z]/.test(this.password.value ?? '');
+  }
+  hasLowercase() {
+    return /[a-z]/.test(this.password.value ?? '');
+  }
+  hasNumber() {
+    return /\d/.test(this.password.value ?? '');
+  }
+  hasSpecial() {
+    return /[@$!%*?&]/.test(this.password.value ?? '');
+  }
+
+  passwordsMatch() {
     return this.password.value === this.confirmPassword.value;
   }
 
-  allValid(): boolean {
-    return this.form.valid && this.passwordsMatch();
+  allValid() {
+    return (
+      this.hasMinLength() &&
+      this.hasUppercase() &&
+      this.hasLowercase() &&
+      this.hasNumber() &&
+      this.hasSpecial() &&
+      this.passwordsMatch() &&
+      this.isChecked()
+    );
   }
 
   onSubmit() {
     if (!this.allValid()) return;
-    this.router.navigate(['/next-page']);
+    console.log('Form submitted successfully!');
+    this.router.navigate(['mobile-number']);
   }
 }

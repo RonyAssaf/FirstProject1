@@ -1,0 +1,37 @@
+<app-header />
+
+<div class="create-page">
+  <div class="create-page__container">
+    <div class="create-page__logo">m</div>
+
+    <h1 class="create-page__title">
+      Enter Your Mobile <br />
+      Number
+    </h1>
+
+    <p class="create-page__subtitle">We will send a verification code to this number</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="email-field">
+        <label>Mobile Number</label>
+
+        <ngx-intl-tel-input
+          [cssClass]="'tel-input'"
+          [preferredCountries]="[CountryISO.Lebanon, CountryISO.UnitedStates]"
+          [enableAutoCountrySelect]="true"
+          [enablePlaceholder]="true"
+          [searchCountryFlag]="true"
+          [searchCountryField]="[SearchCountryField.Name]"
+          [selectFirstCountry]="false"
+          [phoneValidation]="true"
+          [numberFormat]="PhoneNumberFormat.International"
+          formControlName="phone"
+        ></ngx-intl-tel-input>
+      </div>
+
+      <app-primary-button label="Next" [disabled]="form.invalid"></app-primary-button>
+    </form>
+  </div>
+</div>
+
+<ngx-intl-tel-input></ngx-intl-tel-input>
