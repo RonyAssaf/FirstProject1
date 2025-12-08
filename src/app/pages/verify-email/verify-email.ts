@@ -48,16 +48,17 @@ export class VerifyEmailComponent implements OnInit {
     this.toast.show('A new code has been sent.');
     this.startCountdown();
   }
+  get shouldShowError() {
+    return this.currentCode.length > 0 && this.currentCode !== this.CORRECT_CODE;
+  }
 
   onCodeChanged(code: string) {
     this.currentCode = code;
   }
   constructor(private router: Router) {}
-  test = this.currentCode === this.CORRECT_CODE;
   submit() {
     if (this.currentCode === this.CORRECT_CODE) {
       this.toast.show('✔ Email verified successfully!');
-      // Example navigation:
       this.router.navigate(['/create-password']);
     } else {
       this.toast.show('❌ Incorrect verification code.');

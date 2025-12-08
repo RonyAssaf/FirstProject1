@@ -4,6 +4,7 @@ import { CreateAccountComponent } from './pages/create-account/create-account';
 import { VerifyEmailComponent } from './pages/verify-email/verify-email';
 import { CreatePasswordComponent } from './pages/create-password/create-password';
 import { MobileNumber } from './pages/mobile-number/mobile-number';
+import { Transactions } from './pages/transactions/transactions';
 
 export const routes: Routes = [
   { path: '', component: CreateAccountComponent },
@@ -16,4 +17,5 @@ export const routes: Routes = [
     path: 'mobile-number',
     component: MobileNumber,
   },
+  { path: 'transactions', component: Transactions },
 ];

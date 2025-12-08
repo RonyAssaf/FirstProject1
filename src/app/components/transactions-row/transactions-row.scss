@@ -1,0 +1,46 @@
+.tx-row td {
+  white-space: nowrap;
+}
+
+.badge.completed {
+  background: #e6f9f4;
+  color: #12b981;
+}
+
+.badge.pending {
+  background: #fff3e6;
+  color: #f97316;
+}
+
+.badge.failed {
+  background: #feecec;
+  color: #ef4444;
+}
+
+.flag {
+  width: 20px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.amount.positive {
+  color: rgb(43, 43, 255);
+  font-weight: 600;
+}
+
+.amount.negative {
+  color: rgb(255, 32, 32);
+  font-weight: 600;
+}
+
+.id,
+.date,
+.from,
+.to,
+.type,
+.status,
+.currency,
+.amount,
+.fee {
+  padding: 10px;
+}

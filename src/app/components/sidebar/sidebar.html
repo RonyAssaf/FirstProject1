@@ -1,0 +1,25 @@
+<div class="sidebar">
+  <div class="logo">
+    <img src="logo.svg" alt="Logo" class="logo" />
+    <div class="business">Business</div>
+
+    <nav>
+      <a (click)="onSelect('Dashboard')"><i class="pi pi-server"></i>Dashboard</a>
+      <a (click)="onSelect('Overview')"><i class="pi pi-book"></i>Overview</a>
+      <a (click)="onSelect('Payroll Payment')"
+        ><i class="pi pi-file-arrow-up"></i>Payroll Payment</a
+      >
+      <a (click)="onSelect('Wallet Mass Payment')"
+        ><i class="pi pi-file-arrow-up"></i>Wallet Mass Payment</a
+      >
+      <a class="active" (click)="onSelect('Transactions')"
+        ><i class="pi pi-chart-bar"></i>Transactions</a
+      >
+      <a (click)="onSelect('Wallet Transfers')"
+        ><i class="pi pi-arrow-up-right"></i>Wallet Transfers</a
+      >
+    </nav>
+
+    <div class="version">Version 1.1.9-develop</div>
+  </div>
+</div>

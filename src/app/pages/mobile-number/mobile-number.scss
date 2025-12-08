@@ -7,43 +7,54 @@
     max-width: 420px;
     width: 100%;
     text-align: center;
-    flex-direction: column;
-  }
-
-  p {
-    padding-bottom: 20px;
-    text-align: left;
-  }
-  .email-field {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: left;
-
-    label {
-      font-size: 14px;
-      color: #444;
-    }
-
-    input {
-      padding: 14px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 30px;
-    }
   }
 
   &__logo {
     width: 48px;
     height: 48px;
     background: #000;
-    color: white;
+    color: #fff;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 auto 20px;
     font-size: 22px;
-    margin: 0 auto;
   }
+
+  &__title {
+    margin-bottom: 6px;
+  }
+
+  &__subtitle {
+    color: #555;
+    margin-bottom: 20px;
+  }
+}
+
+.label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.phone-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  margin-bottom: 10px;
+}
+
+.tel {
+  width: 100%;
+}
+// iti iti--allow-dropdown iti--show-flags iti--inline-dropdown
+::ng-deep .phone-wrapper .tel .iti__tel-input {
+  height: 45px !important;
+  width: 415px !important;
+  position: relative;
+  display: inline-block;
+  border-radius: 6px;
 }

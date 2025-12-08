@@ -28,3 +28,19 @@ input {
     color: red;
   }
 }
+
+input.placeholder {
+  position: relative;
+  color: transparent; /* Hide empty digit */
+}
+
+input.placeholder::before {
+  content: '0';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #c0c0c0; /* light grey placeholder */
+  font-size: 28px;
+  pointer-events: none;
+}

@@ -1,4 +1,4 @@
-<app-header />
+<app-header></app-header>
 
 <div class="create-page">
   <div class="create-page__container">
@@ -12,33 +12,28 @@
     <p class="create-page__subtitle">We will send a verification code to this number</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="email-field">
-        <label>Mobile Number</label>
+      <label class="label">Mobile Number</label>
 
-        <ngx-intl-tel-input
-          [cssClass]="'tel-input'"
-          [preferredCountries]="[CountryISO.Lebanon, CountryISO.UnitedStates]"
-          [enableAutoCountrySelect]="true"
-          [enablePlaceholder]="true"
-          [searchCountryFlag]="true"
-          [searchCountryField]="[SearchCountryField.Name]"
-          [selectFirstCountry]="false"
-          [phoneValidation]="true"
-          [numberFormat]="PhoneNumberFormat.International"
-          formControlName="phone"
-        ></ngx-intl-tel-input>
+      <div class="phone-wrapper">
+        <intl-tel-input
+          #telInput
+          class="tel"
+          (numberChange)="handleNumberChange($event)"
+          (validityChange)="handleValidityChange($event)"
+          [initOptions]="{
+            initialCountry: 'lb',
+            formatAsYouType: true,
+            autoPlaceholder: 'aggressive',
+            strictMode: true
+          }"
+        ></intl-tel-input>
       </div>
 
-      <app-primary-button label="Next" [disabled]="form.invalid"></app-primary-button>
+      <app-primary-button
+        class="btn"
+        label="Next"
+        [disabled]="form.invalid || !form.get('valid')?.value"
+      ></app-primary-button>
     </form>
   </div>
 </div>
-
-<intl-tel-input
-  #telInput
-  (numberChange)="handleNumberChange($event)"
-  (validityChange)="handleValidityChange($event)"
-  [initOptions]="{
-    initialCountry: 'us',
-  }"
-/>

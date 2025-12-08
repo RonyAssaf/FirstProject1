@@ -1,7 +1,12 @@
 <app-header />
 <div class="wrapper">
   <div class="content">
-    <h1>Enter Your Email Verification Code</h1>
+    <div class="create-page__logo">m</div>
+
+    <h1>
+      Enter Your Email<br />
+      Verification Code
+    </h1>
 
     <p class="sub">
       Please enter the 6-digit verification code sent<br />
@@ -9,6 +14,9 @@
     </p>
 
     <app-otp-input (codeChange)="onCodeChanged($event)"></app-otp-input>
+    <p *ngIf="shouldShowError" class="error-line">
+      the code u entered isn't Valid. Please try again please!
+    </p>
 
     <div class="counter">
       {{ counter | number : '1.0' }}

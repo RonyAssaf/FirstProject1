@@ -1,0 +1,35 @@
+<td class="id">{{ tx.id }}</td>
+<td class="date">{{ tx.date }}</td>
+<td class="from">{{ tx.from }}</td>
+<td class="to">{{ tx.to }}</td>
+<td class="type">{{ tx.type }}</td>
+
+<td class="status">
+  <span
+    class="badge"
+    [ngClass]="{
+      completed: tx.status === 'Completed',
+      pending: tx.status === 'Pending',
+      failed: tx.status === 'Failed'
+    }"
+  >
+    <i class="pi pi-circle-fill"></i>
+    {{ tx.status }}
+  </span>
+</td>
+
+<td class="currency">
+  {{ tx.currency }}
+  <img
+    class="flag"
+    [src]="'https://currency-flags.as93.net/cdn/' + tx.currency.toLowerCase() + '.png'"
+  />
+</td>
+
+<td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
+  {{ tx.total > 0 ? '+ ' + tx.total : (tx.total | number : '1.2-2') }}
+</td>
+<td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
+  {{ tx.total > 0 ? '+ ' + tx.total : (tx.total | number : '1.2-2') }}
+</td>
+<td class="fee">{{ tx.fee | number : '1.2-2' }}</td>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,20 +11,18 @@ import { FormsModule } from '@angular/forms';
 })
 export class OtpInputComponent {
   @Output() codeChange = new EventEmitter<string>();
-
+  @ViewChildren('otpBox') otpBoxes!: QueryList<any>;
   values: string[] = ['', '', '', '', '', ''];
-  correctCode = '123456'; // Replace with your actual correct OTP
+  correctCode = '123456';
 
   // TrackBy to prevent DOM re-render issues
   trackByIndex(index: number, item: any) {
     return index;
   }
 
-  // Determine the class for each input: '' | 'correct' | 'incorrect'
   getStatus(index: number): string {
     const currentValue = this.values[index];
     if (!currentValue) return '';
-    // Only apply correct if full OTP matches
     return this.values.join('') === this.correctCode ? 'correct' : 'incorrect';
   }
 
@@ -32,7 +30,6 @@ export class OtpInputComponent {
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
-    // Only allow single digits
     if (!/^\d$/.test(value)) {
       input.value = '';
       return;
@@ -58,6 +55,32 @@ export class OtpInputComponent {
         this.values[index] = '';
         this.codeChange.emit(this.values.join(''));
       }
+    }
+  }
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    const digits = pasted.replace(/\D/g, '').slice(0, 6);
+
+    if (!digits) return;
+
+    // Fill values array
+    for (let i = 0; i < 6; i++) {
+      this.values[i] = digits[i] ?? '';
+    }
+
+    // Fill input fields visually
+    const boxes = this.otpBoxes.toArray();
+    this.values.forEach((v, i) => {
+      if (boxes[i]) boxes[i].nativeElement.value = v;
+    });
+
+    this.codeChange.emit(this.values.join(''));
+
+    // Focus the last filled box
+    if (boxes[digits.length - 1]) {
+      boxes[digits.length - 1].nativeElement.focus();
     }
   }
 }

@@ -1,0 +1,41 @@
+<div class="transactions-card">
+  <div class="topbar">
+    <h2>Transactions</h2>
+
+    <div class="topbar-actions">
+      <div class="search-box">
+        <span class="pi pi-search"></span>
+        <input type="text" placeholder="Search" />
+      </div>
+
+      <button class="left"><i class="pi pi-chevron-left"></i></button>
+      <button class="right"><i class="pi pi-chevron-right"></i></button>
+
+      <button class="btn-outline"><i class="pi pi-calendar"></i> Start of account</button>
+
+      <button class="btn-outline"><i class="pi pi-align-center"></i> Filters</button>
+    </div>
+  </div>
+
+  <!-- ✅ WHITE TABLE -->
+  <table class="transactions-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Transaction Type</th>
+        <th>Status</th>
+        <th>Currency</th>
+        <th>Total Amount</th>
+        <th>Amount</th>
+        <th>Fee</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr app-transactions-row *ngFor="let tx of transactions" [tx]="tx"></tr>
+    </tbody>
+  </table>
+</div>
