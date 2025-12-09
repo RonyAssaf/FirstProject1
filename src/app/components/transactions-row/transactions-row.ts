@@ -11,4 +11,17 @@ import { CommonModule } from '@angular/common';
 })
 export class TransactionsRow {
   @Input({ required: true }) tx!: Tx;
+
+  getFlagCode(currency: string): string {
+    switch (currency) {
+      case 'USD':
+        return 'us';
+      case 'EUR':
+        return 'eu';
+      case 'LBP':
+        return 'lb';
+      default:
+        return 'us';
+    }
+  }
 }

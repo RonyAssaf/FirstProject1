@@ -23,7 +23,9 @@ export class TransactionsService {
 
       return {
         id: 108300 + index,
-        date: this.randomDate(),
+
+        date: this.getYesterdayPlusIndex(index),
+
         from: `${user.firstName} ${user.lastName}`,
         to: user.company?.name,
         type: index % 2 === 0 ? 'Wallet Transfer' : 'Transfer via Mobile Number',
@@ -41,11 +43,10 @@ export class TransactionsService {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  private randomDate() {
-    const d = new Date(Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 30);
-    return d.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-    });
+  // ✅ RETURNS REAL DATE
+  private getYesterdayPlusIndex(index: number): Date {
+    const date = new Date();
+    date.setDate(date.getDate() - 1 + index);
+    return date;
   }
 }

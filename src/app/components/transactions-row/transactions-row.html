@@ -1,5 +1,9 @@
 <td class="id">{{ tx.id }}</td>
-<td class="date">{{ tx.date }}</td>
+
+<td class="date">
+  {{ tx.date | date : 'dd MMM' }}
+</td>
+
 <td class="from">{{ tx.from }}</td>
 <td class="to">{{ tx.to }}</td>
 <td class="type">{{ tx.type }}</td>
@@ -22,14 +26,17 @@
   {{ tx.currency }}
   <img
     class="flag"
-    [src]="'https://currency-flags.as93.net/cdn/' + tx.currency.toLowerCase() + '.png'"
+    [src]="'https://flagcdn.com/w20/' + getFlagCode(tx.currency) + '.png'"
+    alt="flag"
   />
 </td>
 
 <td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
-  {{ tx.total > 0 ? '+ ' + tx.total : (tx.total | number : '1.2-2') }}
+  {{ tx.total > 0 ? '+ ' + tx.total : (tx.amount | number : '1.2-2') }}
 </td>
-<td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
-  {{ tx.total > 0 ? '+ ' + tx.total : (tx.total | number : '1.2-2') }}
+
+<td class="amount" [class.positive]="tx.amount > 0" [class.negative]="tx.amount < 0">
+  {{ tx.amount | number : '1.2-2' }}
 </td>
+
 <td class="fee">{{ tx.fee | number : '1.2-2' }}</td>

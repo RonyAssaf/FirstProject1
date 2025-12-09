@@ -1,6 +1,6 @@
 export interface Tx {
   id: number;
-  date: string;
+  date: Date;
   from: string;
   to: string;
   type: string;
@@ -9,5 +9,5 @@ export interface Tx {
   total: number;
   amount: number;
   fee: number;
-  countryCode?: string;
+  countryCode: string;
 }

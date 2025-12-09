@@ -1,49 +1,32 @@
 .sidebar {
   width: 260px;
   background: #ffffff;
-  border-right: 1px solid #edf0f5;
   padding: 24px 20px;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
   height: 95%;
 }
 .business {
   font-size: 40px;
   color: #9aa0a6;
-  font-weight: 200;
-}
-
-.sidebar .logo {
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar img {
-  width: 140px;
 }
 
 .sidebar nav {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 30px;
+  margin-top: 42px;
 }
 
 .sidebar nav a {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 25px;
-  text-decoration: none;
+  font-size: 20px;
   cursor: pointer;
   padding: 12px;
   border-radius: 8px;
   transition: 0.2s;
-}
-
-.sidebar[_ngcontent-ng-c2138136563] nav[_ngcontent-ng-c2138136563] a[_ngcontent-ng-c2138136563] {
-  font-size: 30px;
 }
 
 .sidebar nav a:hover {
@@ -61,4 +44,31 @@
   color: #9aa0a6;
   margin-top: 70px;
   text-align: center;
+}
+.sidebar-profile {
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.profile-info {
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.profile-handle {
+  font-size: 12px;
+  color: #6b7280;
 }
