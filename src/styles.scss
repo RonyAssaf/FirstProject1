@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+.p-datepicker .p-datepicker-day-selected-range {
+  background: #d3d3d3 !important; /* light grey */
+  color: #000 !important;
+}
+
+/* ✅ Start & end of the range stay blue */
+.p-datepicker .p-datepicker-day.p-highlight {
+  background: #2b5cff !important; /* your blue */
+  color: #ffffff !important;
+}

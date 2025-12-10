@@ -1,0 +1,46 @@
+<button class="btn-outline" (click)="toggle()">
+  <i class="pi pi-calendar"></i> Start of account
+</button>
+
+<div class="date-popup-backdrop" *ngIf="show()">
+  <div class="date-popup" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close()">✕</button>
+
+    <div class="date-popup-content">
+      <div class="quick-options">
+        <p (click)="filterToday()" [class.active]="previewQuickFilter() === 'today'">Today</p>
+        <p (click)="filterYesterday()" [class.active]="previewQuickFilter() === 'yesterday'">
+          Yesterday
+        </p>
+        <p (click)="filterCurrentWeek()" [class.active]="previewQuickFilter() === 'week'">
+          Current week
+        </p>
+        <p (click)="filterCurrentMonth()" [class.active]="previewQuickFilter() === 'month'">
+          Current month
+        </p>
+        <p (click)="resetPeriod()">Start of account</p>
+      </div>
+
+      <div class="calendar-box">
+        <p-datepicker
+          [ngModel]="selectedRange()"
+          (ngModelChange)="selectedRange.set($event); markRangeMiddle()"
+          [inline]="true"
+          [numberOfMonths]="2"
+          [firstDayOfWeek]="1"
+          [showOtherMonths]="false"
+          selectionMode="range"
+        ></p-datepicker>
+
+        <div class="popup-actions">
+          <button class="cancel" (click)="close()">Cancel</button>
+          <button class="done" (click)="applyRange()">Done</button>
+
+          <div class="right-actions">
+            <p class="reset-period" (click)="resetPeriod()">Reset period</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

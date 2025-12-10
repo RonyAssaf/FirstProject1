@@ -11,18 +11,21 @@
 :host ::ng-deep .p-datatable tbody tr {
   height: 100px;
 }
+
 table {
   border-spacing: 0;
 }
 
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  border-bottom: 1px solid #cdd1d8;
+}
+
+/* ✅ TOP BAR */
 .topbar {
   background-color: white;
   padding: 1px 8px;
   display: flex;
   justify-content: space-between;
-}
-:host ::ng-deep .p-datatable-tbody > tr > td {
-  border-bottom: 1px solid #cdd1d8;
 }
 
 .topbar-actions {
@@ -31,6 +34,7 @@ table {
   gap: 6px;
 }
 
+/* ✅ SEARCH BOX */
 .search-box {
   display: flex;
   align-items: center;
@@ -45,7 +49,8 @@ table {
   border: none;
 }
 
-.btn-outline,
+/* ✅ BUTTONS */
+
 .left,
 .right {
   border: 1px solid #e1e6ef;
@@ -55,177 +60,8 @@ table {
   font-size: 18px;
   cursor: pointer;
 }
-
-/* ✅ BACKDROP */
-.date-popup-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(2px);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ✅ POPUP CONTAINER */
-.date-popup {
-  background: #fff;
-  width: 950px;
-  border-radius: 16px;
-  padding: 24px;
-  position: relative;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* ✅ CLOSE BUTTON */
-.close-btn {
-  position: absolute;
-  top: 18px;
-  right: 22px;
+.btn,
+.btn-outline {
   border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-  color: #999;
-}
-
-/* ✅ CONTENT STRUCTURE */
-.date-popup-content {
-  display: flex;
-  gap: 32px;
-}
-
-/* ✅ QUICK OPTIONS LEFT */
-.quick-options {
-  width: 210px;
-  border-right: 1px solid #e6e9ef;
-  padding-right: 20px;
-
-  p {
-    font-size: 15px;
-    color: #555;
-    cursor: pointer;
-    margin-bottom: 18px;
-    transition: 0.2s;
-  }
-
-  p:hover {
-    color: #2563eb;
-  }
-
-  .active {
-    color: #2563eb;
-    font-weight: 600;
-  }
-}
-
-/* ✅ CALENDAR BOX */
-.calendar-box {
-  flex: 1;
-}
-
-/* ✅ PRIME CALENDAR STYLE FIXES */
-:host ::ng-deep .p-datepicker {
-  border: none !important;
-  box-shadow: none !important;
-  width: 100%;
-}
-
-/* ✅ MONTH TITLES */
-:host ::ng-deep .p-datepicker-title {
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 14px;
-}
-
-/* ✅ WEEK DAYS — MONDAY FIRST */
-:host ::ng-deep .p-datepicker-weekday {
-  color: #999;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* ✅ DAY CELLS */
-:host ::ng-deep .p-datepicker td span {
-  width: 38px;
-  height: 36px;
-  border-radius: 6px;
-  line-height: 36px;
-  font-size: 14px;
-}
-
-/* ✅ SELECTED DAY */
-:host ::ng-deep .p-highlight {
-  background: #2563eb !important;
-  color: white !important;
-}
-
-/* ✅ RANGE IN BETWEEN */
-:host ::ng-deep .p-datepicker td span.p-datepicker-other-month {
-  color: #ccc;
-}
-
-/* ✅ TWO CALENDARS SPACING */
-:host ::ng-deep .p-datepicker-calendar-container {
-  gap: 32px;
-}
-
-/* ✅ ACTION BUTTON BAR */
-.popup-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 26px;
-}
-
-/* ✅ LEFT BUTTONS */
-.popup-actions .cancel {
-  background: #f1f4f9;
-  border: none;
-  padding: 12px 26px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.popup-actions .done {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 12px;
-}
-
-/* ✅ RIGHT RESET */
-.right-actions {
-  margin-left: auto;
-}
-
-.reset-period {
-  color: #2563eb;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-/* ✅ MOBILE SUPPORT */
-@media (max-width: 900px) {
-  .date-popup {
-    width: 95%;
-  }
-
-  .date-popup-content {
-    flex-direction: column;
-  }
-
-  .quick-options {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #e6e9ef;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-  }
+  background-color: white;
 }

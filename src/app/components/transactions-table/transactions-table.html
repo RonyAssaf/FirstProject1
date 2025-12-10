@@ -7,19 +7,29 @@
         <span class="pi pi-search"></span>
         <input type="text" placeholder="Search" />
       </div>
-
-      <button class="left"><i class="pi pi-chevron-left"></i></button>
-      <button class="right"><i class="pi pi-chevron-right"></i></button>
-
-      <button class="btn-outline" (click)="toggleCalendar()">
-        <i class="pi pi-calendar"></i> Start of account
+      <button class="left" (click)="prevPage()" [disabled]="currentPage() === 0">
+        <i class="pi pi-chevron-left"></i>
       </button>
 
-      <button class="btn-outline"><i class="pi pi-align-center"></i> Filters</button>
+      <span class="page-indicator"> Page {{ currentPageDisplay() }} / {{ totalPages() }} </span>
+
+      <button
+        class="right"
+        (click)="nextPage()"
+        [disabled]="(currentPage() + 1) * rowsPerPage >= filteredTransactions().length"
+      >
+        <i class="pi pi-chevron-right"></i>
+      </button>
+
+      <app-date-filter-popup (apply)="onApplyFilter($event)"></app-date-filter-popup>
+
+      <button class="btn-outline">
+        <app-currency-filter-popup (apply)="onCurrencyFilter($event)" />
+      </button>
     </div>
   </div>
 
-  <p-table [value]="filteredTransactions" sortMode="multiple">
+  <p-table [value]="paginatedTransactions()" sortMode="multiple">
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
@@ -50,49 +60,4 @@
       <tr app-transactions-row [tx]="tx"></tr>
     </ng-template>
   </p-table>
-</div>
-
-<div class="date-popup-backdrop" *ngIf="showCalendar" (click)="closeCalendar()">
-  <div class="date-popup" (click)="$event.stopPropagation()">
-    <button class="close-btn" (click)="closeCalendar()">✕</button>
-
-    <div class="date-popup-content">
-      <div class="quick-options">
-        <p (click)="filterToday()" [class.active]="activeQuickFilter === 'today'">Today</p>
-
-        <p (click)="filterYesterday()" [class.active]="activeQuickFilter === 'yesterday'">
-          Yesterday
-        </p>
-
-        <p (click)="filterCurrentWeek()" [class.active]="activeQuickFilter === 'week'">
-          Current week
-        </p>
-
-        <p (click)="filterCurrentMonth()" [class.active]="activeQuickFilter === 'month'">
-          Current month
-        </p>
-
-        <p (click)="resetPeriod()" [class.active]="activeQuickFilter === 'all'">Start of account</p>
-      </div>
-
-      <div class="calendar-box">
-        <p-datepicker
-          [(ngModel)]="selectedRange"
-          selectionMode="range"
-          [inline]="true"
-          [numberOfMonths]="2"
-          [firstDayOfWeek]="1"
-        ></p-datepicker>
-
-        <div class="popup-actions">
-          <button class="cancel" (click)="closeCalendar()">Cancel</button>
-          <button class="done" (click)="applyRange()">Done</button>
-
-          <div class="right-actions">
-            <p class="reset-period" (click)="resetPeriod()">Reset period</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

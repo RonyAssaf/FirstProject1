@@ -9,7 +9,7 @@ export class TransactionsService {
 
   getFakeTransactions() {
     return this.http
-      .get<any>('https://dummyjson.com/users?limit=10')
+      .get<any>('https://dummyjson.com/users?limit=100')
       .pipe(map((res) => this.transformUsersToTx(res.users)));
   }
 

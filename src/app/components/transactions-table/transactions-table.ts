@@ -1,128 +1,105 @@
-import { Component, HostListener, Input, SimpleChanges } from '@angular/core';
+import { Component, computed, signal, input, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+
 import { TransactionsRow } from '../transactions-row/transactions-row';
 import { Tx } from '../transactions-row/transaction.interface';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
-import { DatePickerModule } from 'primeng/datepicker';
-import { FormsModule } from '@angular/forms';
+import { DateFilterPopup, QuickFilter } from '../date-filter-popup/date-filter-popup';
+import { CurrencyFilterPopup } from '../currency-filter-popup/currency-filter-popup';
 
 @Component({
   selector: 'app-transactions-table',
   standalone: true,
-  imports: [
-    TransactionsRow,
-    CommonModule,
-    TableModule,
-    ButtonModule,
-    DatePickerModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, TableModule, TransactionsRow, DateFilterPopup, CurrencyFilterPopup],
   templateUrl: './transactions-table.html',
   styleUrl: './transactions-table.scss',
 })
 export class TransactionsTable {
-  @Input({ required: true }) transactions: Tx[] = [];
+  transactions = input.required<Tx[]>();
 
-  filteredTransactions: Tx[] = [];
-  selectedRange: Date[] | null = null;
-  showCalendar = false;
+  // ✅ PAGINATION SIGNALS
+  readonly rowsPerPage = 10;
+  currentPage = signal(0);
 
-  activeQuickFilter: 'today' | 'yesterday' | 'week' | 'month' | 'all' | 'custom' = 'all';
+  // ✅ FILTER SIGNALS
+  appliedRange = signal<Date[] | null>(null);
+  appliedQuickFilter = signal<QuickFilter>('all');
+  selectedCurrency = signal<string | null>(null);
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['transactions']) {
-      this.filteredTransactions = [...this.transactions];
+  // ✅ FILTERED DATA (DATE + CURRENCY)
+  filteredTransactions = computed(() => {
+    let txs = this.transactions();
+
+    const filter = this.appliedQuickFilter();
+    const range = this.appliedRange();
+
+    if (filter === 'custom' && range?.[0]) {
+      const start = new Date(range[0]);
+      const end = range[1] ? new Date(range[1]) : new Date(range[0]);
+
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+
+      txs = txs.filter((tx) => {
+        const d = new Date(tx.date);
+        return d >= start && d <= end;
+      });
+    }
+
+    const currency = this.selectedCurrency();
+    if (currency) {
+      txs = txs.filter((tx) => tx.currency === currency);
+    }
+
+    return txs;
+  });
+
+  // ✅ PAGINATED DATA (ONLY 10 SHOWN)
+  paginatedTransactions = computed(() => {
+    const start = this.currentPage() * this.rowsPerPage;
+    const end = start + this.rowsPerPage;
+    return this.filteredTransactions().slice(start, end);
+  });
+
+  // ✅ RESET TO PAGE 0 WHEN FILTER CHANGES
+  resetPaginationOnFilterChange = effect(() => {
+    this.appliedRange();
+    this.appliedQuickFilter();
+    this.selectedCurrency();
+    this.currentPage.set(0);
+  });
+
+  // ✅ BUTTON CONTROLS
+  nextPage() {
+    const maxPage = Math.ceil(this.filteredTransactions().length / this.rowsPerPage) - 1;
+
+    if (this.currentPage() < maxPage) {
+      this.currentPage.update((v) => v + 1);
     }
   }
 
-  toggleCalendar() {
-    this.showCalendar = !this.showCalendar;
+  prevPage() {
+    if (this.currentPage() > 0) {
+      this.currentPage.update((v) => v - 1);
+    }
   }
 
-  closeCalendar() {
-    this.showCalendar = false;
+  // ✅ FILTER HANDLERS
+  onApplyFilter(event: { filter: QuickFilter; range: Date[] | null }) {
+    this.appliedQuickFilter.set(event.filter);
+    this.appliedRange.set(event.range);
   }
 
-  filterToday() {
-    const today = new Date().toDateString();
-
-    this.filteredTransactions = this.transactions.filter((tx) => tx.date.toDateString() === today);
-
-    this.activeQuickFilter = 'today';
-    this.closeCalendar();
+  onCurrencyFilter(currency: string | null) {
+    this.selectedCurrency.set(currency);
   }
+  // ✅ TOTAL PAGES
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredTransactions().length / this.rowsPerPage);
+  });
 
-  filterYesterday() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    this.filteredTransactions = this.transactions.filter(
-      (tx) => tx.date.toDateString() === yesterday.toDateString()
-    );
-
-    this.activeQuickFilter = 'yesterday';
-    this.closeCalendar();
-  }
-
-  filterCurrentWeek() {
-    const now = new Date();
-
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999);
-
-    this.filteredTransactions = this.transactions.filter(
-      (tx) => tx.date >= startOfWeek && tx.date <= endOfWeek
-    );
-
-    this.activeQuickFilter = 'week';
-    this.closeCalendar();
-  }
-
-  filterCurrentMonth() {
-    const now = new Date();
-
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    endOfMonth.setHours(23, 59, 59, 999);
-
-    this.filteredTransactions = this.transactions.filter(
-      (tx) => tx.date >= startOfMonth && tx.date <= endOfMonth
-    );
-
-    this.activeQuickFilter = 'month';
-    this.closeCalendar();
-  }
-
-  applyRange() {
-    if (!this.selectedRange || this.selectedRange.length < 2) return;
-
-    const [start, end] = this.selectedRange;
-
-    this.filteredTransactions = this.transactions.filter(
-      (tx) => tx.date >= start && tx.date <= end
-    );
-
-    this.activeQuickFilter = 'custom';
-    this.closeCalendar();
-  }
-
-  resetPeriod() {
-    this.filteredTransactions = [...this.transactions];
-    this.selectedRange = null;
-    this.activeQuickFilter = 'all';
-    this.closeCalendar();
-  }
-
-  @HostListener('document:keydown.escape')
-  onEsc() {
-    this.closeCalendar();
-  }
+  // ✅ HUMAN-READABLE CURRENT PAGE (starts from 1)
+  currentPageDisplay = computed(() => {
+    return this.currentPage() + 1;
+  });
 }
