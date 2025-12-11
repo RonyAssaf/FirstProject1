@@ -9,15 +9,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './currency-filter-popup.scss',
 })
 export class CurrencyFilterPopup {
-  // ✅ SIGNALS
   isOpen = signal(false);
+
   selectedCurrency = signal<string | null>(null);
 
-  // ✅ SIGNAL OUTPUT (Angular 17+)
   apply = output<string | null>();
 
   toggle() {
-    this.isOpen.update((v) => !v);
+    this.isOpen.update((open) => !open);
   }
 
   select(currency: string) {
@@ -34,8 +33,9 @@ export class CurrencyFilterPopup {
     this.apply.emit(null);
     this.isOpen.set(false);
   }
+
   @HostListener('document:keydown.escape')
-  onEsc() {
+  closeOnEsc() {
     this.isOpen.set(false);
   }
 }

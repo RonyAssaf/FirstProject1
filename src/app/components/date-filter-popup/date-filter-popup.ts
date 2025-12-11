@@ -13,18 +13,19 @@ export type QuickFilter = 'today' | 'yesterday' | 'week' | 'month' | 'all' | 'cu
   styleUrl: './date-filter-popup.scss',
 })
 export class DateFilterPopup {
+ 
   @Output() apply = new EventEmitter<{
     filter: QuickFilter;
     range: Date[] | null;
   }>();
 
-  show = signal(false);
 
+  show = signal(false);
   selectedRange = signal<Date[] | null>(null);
   previewQuickFilter = signal<QuickFilter>('all');
 
   toggle() {
-    this.show.update((v) => !v);
+    this.show.update(v => !v);
   }
 
   close() {
@@ -32,63 +33,49 @@ export class DateFilterPopup {
   }
 
   @HostListener('document:keydown.escape')
-  onEsc() {
+  closeOnEsc() {
     this.close();
   }
-  filterToday() {
-    const today = new Date();
-    this.previewQuickFilter.set('today');
-    this.selectedRange.set([today, today]);
 
-    this.markRangeMiddle(); // ✅ REQUIRED
+  filterToday() {
+    const today = this.startOfDay(new Date());
+    this.applyQuickFilter('today', today, today);
   }
 
   filterYesterday() {
     const y = new Date();
     y.setDate(y.getDate() - 1);
-
-    this.previewQuickFilter.set('yesterday');
-    this.selectedRange.set([y, y]);
-
-    this.markRangeMiddle(); // ✅ REQUIRED
+    const day = this.startOfDay(y);
+    this.applyQuickFilter('yesterday', day, day);
   }
 
   filterCurrentWeek() {
     const start = this.getStartOfWeek(new Date());
-    const end = new Date(start);
-    end.setDate(start.getDate() + 6);
-
-    this.previewQuickFilter.set('week');
-    this.selectedRange.set([start, end]);
-
-    this.markRangeMiddle(); // ✅ REQUIRED
+    const end = this.endOfDay(new Date(start.getTime() + 6 * 86400000));
+    this.applyQuickFilter('week', start, end);
   }
 
   filterCurrentMonth() {
     const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-    this.previewQuickFilter.set('month');
-    this.selectedRange.set([start, end]);
-
-    this.markRangeMiddle(); // ✅ REQUIRED
+    const start = this.startOfDay(new Date(now.getFullYear(), now.getMonth(), 1));
+    const end = this.endOfDay(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    this.applyQuickFilter('month', start, end);
   }
 
-  // ✅ APPLY BUTTON
+  private applyQuickFilter(type: QuickFilter, start: Date, end: Date) {
+    this.previewQuickFilter.set(type);
+    this.selectedRange.set([start, end]);
+    this.markRangeMiddle();
+  }
+
+
   applyRange() {
     const range = this.selectedRange();
 
     if (range?.[0]) {
-      this.apply.emit({
-        filter: 'custom',
-        range: [...range],
-      });
+      this.apply.emit({ filter: 'custom', range: [...range] });
     } else {
-      this.apply.emit({
-        filter: this.previewQuickFilter(),
-        range: null,
-      });
+      this.apply.emit({ filter: this.previewQuickFilter(), range: null });
     }
 
     this.close();
@@ -98,69 +85,74 @@ export class DateFilterPopup {
     this.selectedRange.set(null);
     this.previewQuickFilter.set('all');
 
-    this.apply.emit({
-      filter: 'all',
-      range: null,
-    });
+    this.apply.emit({ filter: 'all', range: null });
 
     this.close();
   }
 
-  // ✅ HELPERS
-  private getStartOfWeek(date: Date) {
-    const d = new Date(date);
-    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }
-
-  // ✅ RANGE MIDDLE FIX
+  // ----------------------------------
+  // CALENDAR MIDDLE-RANGE HIGHLIGHTING
+  // ----------------------------------
   markRangeMiddle() {
     const range = this.selectedRange();
-
     if (!range || range.length !== 2) {
-      // optional: clear previous middles
-      document
-        .querySelectorAll('td.p-datepicker-day-cell.range-middle')
-        .forEach((el) => el.classList.remove('range-middle'));
+      this.clearMiddleClasses();
       return;
     }
 
-    const startMs = new Date(
-      range[0].getFullYear(),
-      range[0].getMonth(),
-      range[0].getDate()
-    ).getTime();
-
-    const endMs = new Date(
-      range[1].getFullYear(),
-      range[1].getMonth(),
-      range[1].getDate()
-    ).getTime();
+    const startMs = this.toDayMs(range[0]);
+    const endMs = this.toDayMs(range[1]);
 
     setTimeout(() => {
-      const cells = document.querySelectorAll(
-        'td.p-datepicker-day-cell'
-      ) as NodeListOf<HTMLTableCellElement>;
+      const cells = document.querySelectorAll('td.p-datepicker-day-cell') as NodeListOf<HTMLTableCellElement>;
 
-      cells.forEach((td) => {
+      cells.forEach(td => {
         td.classList.remove('range-middle');
 
-        const span = td.querySelector('.p-datepicker-day') as HTMLElement | null;
-        if (!span) return;
+        const dayElem = td.querySelector('.p-datepicker-day') as HTMLElement | null;
+        if (!dayElem) return;
 
-        const dateAttr = span.getAttribute('data-date');
+        const dateAttr = dayElem.getAttribute('data-date');
         if (!dateAttr) return;
 
         const [y, m, d] = dateAttr.split('-').map(Number);
-
-        // 🔥 IMPORTANT: m is already 0-based from PrimeNG → no -1 here
-        const cellMs = new Date(y, m, d).getTime();
+        const cellMs = new Date(y, m, d).getTime(); // m is already correct (PrimeNG gives 0-based)
 
         if (cellMs > startMs && cellMs < endMs) {
           td.classList.add('range-middle');
         }
       });
-    }, 0);
+    });
+  }
+
+  private clearMiddleClasses() {
+    document
+      .querySelectorAll('td.p-datepicker-day-cell.range-middle')
+      .forEach(el => el.classList.remove('range-middle'));
+  }
+
+  // ----------------------------------
+  // DATE HELPERS
+  // ----------------------------------
+  private startOfDay(date: Date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  private endOfDay(date: Date) {
+    const d = new Date(date);
+    d.setHours(23, 59, 59, 999);
+    return d;
+  }
+
+  private toDayMs(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  }
+
+  private getStartOfWeek(date: Date) {
+    const d = this.startOfDay(date);
+    d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // Monday = start
+    return d;
   }
 }

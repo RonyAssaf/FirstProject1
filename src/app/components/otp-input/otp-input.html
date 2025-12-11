@@ -14,37 +14,3 @@
     [class.placeholder]="!values[i]"
   />
 </div>
-
-<div>
-  <input
-    #otpBox
-    placeholder="1"
-    maxlength="1"
-    *ngFor="let v of values; let i = index; trackBy: trackByIndex"
-    type="text"
-    inputmode="numeric"
-    [value]="values[i]"
-    (input)="onInput($event, i)"
-    (keydown)="onKeyDown($event, i)"
-    [ngClass]="getStatus(i)"
-    [class.placeholder]="!values[i]"
-  />
-</div>
-<div>
-  <br />
-  <br />
-
-  <input
-    #otpBox
-    placeholder="2"
-    maxlength="1"
-    *ngFor="let v of values; let i = index; trackBy: trackByIndex"
-    type="text"
-    inputmode="numeric"
-    [value]="values[i]"
-    (input)="onInput($event, i)"
-    (keydown)="onKeyDown($event, i)"
-    [ngClass]="getStatus(i)"
-    [class.placeholder]="!values[i]"
-  />
-</div>

@@ -2,8 +2,8 @@ import { Component, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import 'primeicons/primeicons.css';
 
+import 'primeicons/primeicons.css';
 import { Header } from '../../core/header/header';
 
 @Component({
@@ -14,6 +14,7 @@ import { Header } from '../../core/header/header';
   styleUrls: ['./create-password.scss'],
 })
 export class CreatePasswordComponent {
+
   form!: FormGroup<{
     password: FormControl<string | null>;
     confirmPassword: FormControl<string | null>;
@@ -25,27 +26,36 @@ export class CreatePasswordComponent {
       confirmPassword: this.fb.control<string | null>(''),
     });
   }
+
+
   isChecked = signal(false);
+
 
   get password() {
     return this.form.controls.password;
   }
+
   get confirmPassword() {
     return this.form.controls.confirmPassword;
   }
 
+
   hasMinLength() {
     return (this.password.value?.length ?? 0) >= 8;
   }
+
   hasUppercase() {
     return /[A-Z]/.test(this.password.value ?? '');
   }
+
   hasLowercase() {
     return /[a-z]/.test(this.password.value ?? '');
   }
+
   hasNumber() {
     return /\d/.test(this.password.value ?? '');
   }
+
   hasSpecial() {
     return /[@$!%*?&]/.test(this.password.value ?? '');
   }
@@ -53,6 +63,7 @@ export class CreatePasswordComponent {
   passwordsMatch() {
     return this.password.value === this.confirmPassword.value;
   }
+
 
   allValid() {
     return (
@@ -66,8 +77,10 @@ export class CreatePasswordComponent {
     );
   }
 
+
   onSubmit() {
     if (!this.allValid()) return;
+
     console.log('Form submitted successfully!');
     this.router.navigate(['mobile-number']);
   }

@@ -17,11 +17,9 @@ import { CurrencyFilterPopup } from '../currency-filter-popup/currency-filter-po
 export class TransactionsTable {
   transactions = input.required<Tx[]>();
 
-  // ✅ PAGINATION SIGNALS
   readonly rowsPerPage = 10;
   currentPage = signal(0);
 
-  // ✅ FILTER SIGNALS
   appliedRange = signal<Date[] | null>(null);
   appliedQuickFilter = signal<QuickFilter>('all');
   selectedCurrency = signal<string | null>(null);
@@ -56,12 +54,11 @@ export class TransactionsTable {
 
   // ✅ PAGINATED DATA (ONLY 10 SHOWN)
   paginatedTransactions = computed(() => {
-    const start = this.currentPage() * this.rowsPerPage;
+    const start = this.currentPage()
     const end = start + this.rowsPerPage;
     return this.filteredTransactions().slice(start, end);
   });
 
-  // ✅ RESET TO PAGE 0 WHEN FILTER CHANGES
   resetPaginationOnFilterChange = effect(() => {
     this.appliedRange();
     this.appliedQuickFilter();

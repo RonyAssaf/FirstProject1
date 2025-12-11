@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
 import { Header } from '../../core/header/header';
 import { Disclaimer } from '../../shared/disclaimer/disclaimer';
@@ -24,9 +24,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CreateAccountComponent {
   form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.required, this.validateEmail]),
   });
-
   constructor(private router: Router) {}
   submit() {
     if (this.form.valid) {
@@ -34,4 +33,11 @@ export class CreateAccountComponent {
       this.router.navigate(['verify-email']);
     }
   }
+
+   validateEmail(control: AbstractControl): ValidationErrors | null {
+  const value = control.value || '';
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return pattern.test(value) ? null : { invalidEmail: true };
 }
+}
+  

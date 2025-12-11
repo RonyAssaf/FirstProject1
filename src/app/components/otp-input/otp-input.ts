@@ -10,21 +10,24 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./otp-input.scss'],
 })
 export class OtpInputComponent {
+
   @Output() codeChange = new EventEmitter<string>();
   @ViewChildren('otpBox') otpBoxes!: QueryList<any>;
+
+
   values: string[] = ['', '', '', '', '', ''];
   correctCode = '123456';
 
-  // TrackBy to prevent DOM re-render issues
-  trackByIndex(index: number, item: any) {
+
+  trackByIndex(index: number) {
     return index;
   }
 
   getStatus(index: number): string {
-    const currentValue = this.values[index];
-    if (!currentValue) return '';
+    if (!this.values[index]) return '';
     return this.values.join('') === this.correctCode ? 'correct' : 'incorrect';
   }
+
 
   onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
@@ -38,39 +41,36 @@ export class OtpInputComponent {
     this.values[index] = value;
     this.codeChange.emit(this.values.join(''));
 
-    // Move focus to next input if it exists
-    const nextInput = input.nextElementSibling as HTMLInputElement | null;
-    if (nextInput) nextInput.focus();
+    const next = input.nextElementSibling as HTMLInputElement | null;
+    if (next) next.focus();
   }
 
   onKeyDown(event: KeyboardEvent, index: number) {
     const input = event.target as HTMLInputElement;
 
-    // Handle backspace
     if (event.key === 'Backspace') {
       if (input.value === '') {
-        const prevInput = input.previousElementSibling as HTMLInputElement | null;
-        if (prevInput) prevInput.focus();
+        const prev = input.previousElementSibling as HTMLInputElement | null;
+        if (prev) prev.focus();
       } else {
         this.values[index] = '';
         this.codeChange.emit(this.values.join(''));
       }
     }
   }
+
+
   onPaste(event: ClipboardEvent) {
     event.preventDefault();
 
     const pasted = event.clipboardData?.getData('text') ?? '';
     const digits = pasted.replace(/\D/g, '').slice(0, 6);
-
     if (!digits) return;
 
-    // Fill values array
     for (let i = 0; i < 6; i++) {
       this.values[i] = digits[i] ?? '';
     }
 
-    // Fill input fields visually
     const boxes = this.otpBoxes.toArray();
     this.values.forEach((v, i) => {
       if (boxes[i]) boxes[i].nativeElement.value = v;
@@ -78,9 +78,7 @@ export class OtpInputComponent {
 
     this.codeChange.emit(this.values.join(''));
 
-    // Focus the last filled box
-    if (boxes[digits.length - 1]) {
-      boxes[digits.length - 1].nativeElement.focus();
-    }
+    const last = boxes[digits.length - 1];
+    if (last) last.nativeElement.focus();
   }
 }

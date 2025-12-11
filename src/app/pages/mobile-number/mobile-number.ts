@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { Header } from '../../core/header/header';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
+
 import { IntlTelInputComponent } from 'intl-tel-input/angularWithUtils';
 import 'intl-tel-input/styles';
 
@@ -16,46 +17,49 @@ import 'intl-tel-input/styles';
     Header,
     PrimaryButton,
     ReactiveFormsModule,
-    FormsModule,
     IntlTelInputComponent,
   ],
   templateUrl: './mobile-number.html',
   styleUrls: ['./mobile-number.scss'],
 })
 export class MobileNumber {
+  /* ------------------------------- FORM SETUP ------------------------------- */
+
   form = new FormGroup({
-    phone: new FormControl(''),
-    valid: new FormControl(false),
+    phone: new FormControl<string | null>(null),
+    valid: new FormControl<boolean>(false),
   });
 
   constructor(private router: Router) {}
 
+  /* ------------------------------ INPUT EVENTS ------------------------------ */
+
   handleNumberChange(event: any) {
+    // event contains: { number, nationalNumber, internationalNumber, countryCode }
     const { number } = event;
     this.form.patchValue({ phone: number });
-    this.form.controls['phone'].updateValueAndValidity();
   }
 
   handleValidityChange(isValid: boolean) {
-    this.form.get('valid')?.setValue(isValid);
+    this.form.patchValue({ valid: isValid });
+
+    const phoneControl = this.form.controls['phone'];
 
     if (!isValid) {
-      this.form.controls['phone'].setErrors({ invalidPhone: true });
-    } else {
-      const errors = this.form.controls['phone'].errors;
-      if (errors) {
-        delete errors['invalidPhone'];
-        if (Object.keys(errors).length === 0) {
-          this.form.controls['phone'].setErrors(null);
-        }
-      }
+      phoneControl.setErrors({ invalidPhone: true });
+      return;
     }
+
   }
 
+  /* --------------------------------- SUBMIT -------------------------------- */
+
   submit() {
-    if (this.form.valid) {
-      console.log('Submitted phone:', this.form.value.phone);
-      this.router.navigate(['transactions']);
-    }
+    if (!this.form.valid) return;
+
+    const phone = this.form.value.phone;
+    console.log('Submitted phone:', phone);
+
+    this.router.navigate(['transactions']);
   }
 }
