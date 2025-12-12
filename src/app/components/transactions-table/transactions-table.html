@@ -1,63 +1,90 @@
 <div class="transactions-card">
+  <!-- ================= TOP BAR ================= -->
   <div class="topbar">
     <h2>Transactions</h2>
 
     <div class="topbar-actions">
+      <!-- SEARCH -->
       <div class="search-box">
         <span class="pi pi-search"></span>
         <input type="text" placeholder="Search" />
       </div>
-      <button class="left" (click)="prevPage()" [disabled]="currentPage() === 0">
+
+      <!-- PAGINATION -->
+      <button class="nav-btn" (click)="prevPage()" [disabled]="currentPage() === 0">
         <i class="pi pi-chevron-left"></i>
       </button>
 
       <span class="page-indicator"> Page {{ currentPageDisplay() }} / {{ totalPages() }} </span>
 
       <button
-        class="right"
+        class="nav-btn"
         (click)="nextPage()"
         [disabled]="(currentPage() + 1) * rowsPerPage >= filteredTransactions().length"
       >
         <i class="pi pi-chevron-right"></i>
       </button>
 
+      <!-- DATE FILTER -->
       <app-date-filter-popup (apply)="onApplyFilter($event)"></app-date-filter-popup>
 
+      <!-- CURRENCY FILTER -->
       <button class="btn-outline">
         <app-currency-filter-popup (apply)="onCurrencyFilter($event)" />
       </button>
     </div>
   </div>
 
-  <p-table [value]="paginatedTransactions()" sortMode="multiple">
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+  <!-- ================= TABLE ================= -->
+  <div class="table-wrapper">
+    <p-table [value]="paginatedTransactions()">
+      <ng-template pTemplate="header">
+        <tr>
+          <th (click)="sortBy('id')">
+            <span class="th-content">ID <i [class]="getSortIcon('id')"></i></span>
+          </th>
 
-        <th pSortableColumn="date">
-          Date
-          <p-sortIcon field="date"></p-sortIcon>
-          <p-columnFilter
-            field="date"
-            type="date"
-            display="menu"
-            dateFormat="dd/mm/yy"
-          ></p-columnFilter>
-        </th>
+          <th (click)="sortBy('date')">
+            <span class="th-content">Date <i [class]="getSortIcon('date')"></i></span>
+          </th>
 
-        <th pSortableColumn="from">From <p-sortIcon field="from" /></th>
-        <th pSortableColumn="to">To <p-sortIcon field="to" /></th>
-        <th pSortableColumn="type">Transaction Type <p-sortIcon field="type" /></th>
-        <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-        <th pSortableColumn="currency">Currency <p-sortIcon field="currency" /></th>
-        <th pSortableColumn="total">Total Amount <p-sortIcon field="total" /></th>
-        <th pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
-        <th pSortableColumn="fee">Fee <p-sortIcon field="fee" /></th>
-      </tr>
-    </ng-template>
+          <th (click)="sortBy('from')">
+            <span class="th-content">From <i [class]="getSortIcon('from')"></i></span>
+          </th>
 
-    <ng-template pTemplate="body" let-tx>
-      <tr app-transactions-row [tx]="tx"></tr>
-    </ng-template>
-  </p-table>
+          <th (click)="sortBy('to')" class="too">
+            <span class="th-content">To <i [class]="getSortIcon('to')"></i></span>
+          </th>
+
+          <th (click)="sortBy('type')">
+            <span class="th-content"> Transaction Type <i [class]="getSortIcon('type')"></i> </span>
+          </th>
+
+          <th (click)="sortBy('status')" class="statuss">
+            <span class="th-content"> Status <i [class]="getSortIcon('status')"></i> </span>
+          </th>
+
+          <th (click)="sortBy('currency')">
+            <span class="th-content"> Currency <i [class]="getSortIcon('currency')"></i> </span>
+          </th>
+
+          <th (click)="sortBy('total')">
+            <span class="th-content"> Total Amount <i [class]="getSortIcon('total')"></i> </span>
+          </th>
+
+          <th (click)="sortBy('amount')">
+            <span class="th-content"> Amount <i [class]="getSortIcon('amount')"></i> </span>
+          </th>
+
+          <th (click)="sortBy('fee')">
+            <span class="th-content"> Fee <i [class]="getSortIcon('fee')"></i> </span>
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-tx>
+        <tr app-transactions-row [tx]="tx"></tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

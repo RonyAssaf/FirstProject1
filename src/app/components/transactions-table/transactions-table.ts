@@ -17,27 +17,32 @@ import { CurrencyFilterPopup } from '../currency-filter-popup/currency-filter-po
 export class TransactionsTable {
   transactions = input.required<Tx[]>();
 
+  sortField = signal<string | null>(null);
+  sortOrder = signal<1 | -1>(1);
+
   readonly rowsPerPage = 10;
   currentPage = signal(0);
 
   appliedRange = signal<Date[] | null>(null);
   appliedQuickFilter = signal<QuickFilter>('all');
   selectedCurrency = signal<string | null>(null);
-
-  // ✅ FILTERED DATA (DATE + CURRENCY)
+  // explain
   filteredTransactions = computed(() => {
-    let txs = this.transactions();
+    let txs = [...this.transactions()];
 
+    // ----------------------
+    // DATE FILTER (custom)
+    // ----------------------
     const filter = this.appliedQuickFilter();
     const range = this.appliedRange();
-
+    // expalin
     if (filter === 'custom' && range?.[0]) {
       const start = new Date(range[0]);
-      const end = range[1] ? new Date(range[1]) : new Date(range[0]);
+      const end = new Date(range[1] ?? range[0]);
 
       start.setHours(0, 0, 0, 0);
       end.setHours(23, 59, 59, 999);
-
+      // explain
       txs = txs.filter((tx) => {
         const d = new Date(tx.date);
         return d >= start && d <= end;
@@ -49,12 +54,30 @@ export class TransactionsTable {
       txs = txs.filter((tx) => tx.currency === currency);
     }
 
+    const field = this.sortField();
+    const order = this.sortOrder();
+
+    if (field) {
+      txs.sort((a, b) => {
+        let valA: any = (a as any)[field];
+        let valB: any = (b as any)[field];
+
+        if (field === 'date') {
+          valA = new Date(valA).getTime();
+          valB = new Date(valB).getTime();
+        }
+
+        if (valA < valB) return -1 * order;
+        if (valA > valB) return 1 * order;
+        return 0;
+      });
+    }
+
     return txs;
   });
 
-  // ✅ PAGINATED DATA (ONLY 10 SHOWN)
   paginatedTransactions = computed(() => {
-    const start = this.currentPage()
+    const start = this.currentPage() * this.rowsPerPage;
     const end = start + this.rowsPerPage;
     return this.filteredTransactions().slice(start, end);
   });
@@ -65,11 +88,9 @@ export class TransactionsTable {
     this.selectedCurrency();
     this.currentPage.set(0);
   });
-
-  // ✅ BUTTON CONTROLS
+  // fix
   nextPage() {
     const maxPage = Math.ceil(this.filteredTransactions().length / this.rowsPerPage) - 1;
-
     if (this.currentPage() < maxPage) {
       this.currentPage.update((v) => v + 1);
     }
@@ -81,7 +102,9 @@ export class TransactionsTable {
     }
   }
 
-  // ✅ FILTER HANDLERS
+  // ===========================
+  // FILTER HANDLERS
+  // ===========================
   onApplyFilter(event: { filter: QuickFilter; range: Date[] | null }) {
     this.appliedQuickFilter.set(event.filter);
     this.appliedRange.set(event.range);
@@ -90,13 +113,23 @@ export class TransactionsTable {
   onCurrencyFilter(currency: string | null) {
     this.selectedCurrency.set(currency);
   }
-  // ✅ TOTAL PAGES
-  totalPages = computed(() => {
-    return Math.ceil(this.filteredTransactions().length / this.rowsPerPage);
-  });
 
-  // ✅ HUMAN-READABLE CURRENT PAGE (starts from 1)
-  currentPageDisplay = computed(() => {
-    return this.currentPage() + 1;
-  });
+  sortBy(field: string) {
+    if (this.sortField() === field) {
+      this.sortOrder.update((v) => (v === 1 ? -1 : 1));
+    } else {
+      this.sortField.set(field);
+      this.sortOrder.set(1);
+    }
+  }
+
+  getSortIcon(field: string) {
+    if (this.sortField() !== field) return 'pi pi-sort-alt';
+    return this.sortOrder() === 1 ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down';
+  }
+
+  totalPages = computed(() => Math.ceil(this.filteredTransactions().length / this.rowsPerPage));
+
+  currentPageDisplay = computed(() => this.currentPage() + 1);
 }
+// add search button

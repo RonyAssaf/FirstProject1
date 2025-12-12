@@ -9,7 +9,7 @@
 }
 
 .popup {
-  width: 700px;
+  width: 1000px;
   background: white;
   border-radius: 12px;
   padding: 20px;
@@ -45,9 +45,10 @@
 .done {
   background: #2b5cff;
   color: white;
-  padding: 8px 24px;
+  padding: 16px 30px;
   border-radius: 10px;
   border: none;
+  box-shadow: grey 1px 1px;
   cursor: pointer;
 }
 

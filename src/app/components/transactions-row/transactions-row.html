@@ -6,6 +6,7 @@
 
 <td class="from">{{ tx.from }}</td>
 <td class="to">{{ tx.to }}</td>
+
 <td class="type">{{ tx.type }}</td>
 
 <td class="status">
@@ -23,16 +24,15 @@
 </td>
 
 <td class="currency">
-  {{ tx.currency }}
+  <span>{{ tx.currency }}</span>
   <img
     class="flag"
     [src]="'https://flagcdn.com/w20/' + getFlagCode(tx.currency) + '.png'"
     alt="flag"
   />
 </td>
-
 <td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
-  {{ tx.total > 0 ? '+ ' + tx.total : (tx.amount | number : '1.2-2') }}
+  {{ tx.total | number : '1.2-2' }}
 </td>
 
 <td class="amount" [class.positive]="tx.amount > 0" [class.negative]="tx.amount < 0">

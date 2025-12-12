@@ -13,19 +13,19 @@ export type QuickFilter = 'today' | 'yesterday' | 'week' | 'month' | 'all' | 'cu
   styleUrl: './date-filter-popup.scss',
 })
 export class DateFilterPopup {
- 
   @Output() apply = new EventEmitter<{
     filter: QuickFilter;
     range: Date[] | null;
   }>();
 
-
   show = signal(false);
   selectedRange = signal<Date[] | null>(null);
   previewQuickFilter = signal<QuickFilter>('all');
+  triggerLabel = signal('Start of account');
 
+  /* OPEN / CLOSE */
   toggle() {
-    this.show.update(v => !v);
+    this.show.update((v) => !v);
   }
 
   close() {
@@ -37,122 +37,145 @@ export class DateFilterPopup {
     this.close();
   }
 
+  /* QUICK FILTERS */
   filterToday() {
-    const today = this.startOfDay(new Date());
-    this.applyQuickFilter('today', today, today);
+    const d = this.startOfDay(new Date());
+    this.setQuickFilter('today', [d, d], 'Today');
   }
 
   filterYesterday() {
-    const y = new Date();
-    y.setDate(y.getDate() - 1);
-    const day = this.startOfDay(y);
-    this.applyQuickFilter('yesterday', day, day);
+    const d = this.startOfDay(new Date());
+    d.setDate(d.getDate() - 1);
+    this.setQuickFilter('yesterday', [d, d], 'Yesterday');
   }
 
   filterCurrentWeek() {
     const start = this.getStartOfWeek(new Date());
     const end = this.endOfDay(new Date(start.getTime() + 6 * 86400000));
-    this.applyQuickFilter('week', start, end);
+    this.setQuickFilter('week', [start, end], 'Current week');
   }
 
   filterCurrentMonth() {
     const now = new Date();
     const start = this.startOfDay(new Date(now.getFullYear(), now.getMonth(), 1));
     const end = this.endOfDay(new Date(now.getFullYear(), now.getMonth() + 1, 0));
-    this.applyQuickFilter('month', start, end);
+    this.setQuickFilter('month', [start, end], 'Current month');
   }
 
-  private applyQuickFilter(type: QuickFilter, start: Date, end: Date) {
+  private setQuickFilter(type: QuickFilter, range: Date[], label: string) {
     this.previewQuickFilter.set(type);
-    this.selectedRange.set([start, end]);
-    this.markRangeMiddle();
+    this.selectedRange.set(range);
+    this.triggerLabel.set(label);
   }
 
-
+  /* APPLY */
   applyRange() {
     const range = this.selectedRange();
-
-    if (range?.[0]) {
-      this.apply.emit({ filter: 'custom', range: [...range] });
-    } else {
-      this.apply.emit({ filter: this.previewQuickFilter(), range: null });
-    }
-
-    this.close();
-  }
-
-  resetPeriod() {
-    this.selectedRange.set(null);
-    this.previewQuickFilter.set('all');
-
-    this.apply.emit({ filter: 'all', range: null });
-
-    this.close();
-  }
-
-  // ----------------------------------
-  // CALENDAR MIDDLE-RANGE HIGHLIGHTING
-  // ----------------------------------
-  markRangeMiddle() {
-    const range = this.selectedRange();
-    if (!range || range.length !== 2) {
-      this.clearMiddleClasses();
+    if (!range?.[0]) {
+      this.resetPeriod();
       return;
     }
 
-    const startMs = this.toDayMs(range[0]);
-    const endMs = this.toDayMs(range[1]);
+    const matched = this.detectQuickFilter(range);
 
-    setTimeout(() => {
-      const cells = document.querySelectorAll('td.p-datepicker-day-cell') as NodeListOf<HTMLTableCellElement>;
+    if (matched) {
+      this.previewQuickFilter.set(matched.type);
+      this.triggerLabel.set(matched.label);
+      this.apply.emit({ filter: matched.type, range });
+    } else {
+      this.previewQuickFilter.set('custom');
+      this.triggerLabel.set(this.formatRangeLabel(range));
+      this.apply.emit({ filter: 'custom', range });
+    }
 
-      cells.forEach(td => {
-        td.classList.remove('range-middle');
+    this.close();
+  }
 
-        const dayElem = td.querySelector('.p-datepicker-day') as HTMLElement | null;
-        if (!dayElem) return;
+  /* RESET */
+  resetPeriod() {
+    this.selectedRange.set(null);
+    this.previewQuickFilter.set('all');
+    this.triggerLabel.set('Start of account');
+    this.apply.emit({ filter: 'all', range: null });
+    this.close();
+  }
 
-        const dateAttr = dayElem.getAttribute('data-date');
-        if (!dateAttr) return;
+  /* 🔍 QUICK FILTER DETECTION */
+  private detectQuickFilter(range: Date[]) {
+    const [start, end] = range.map((d) => this.toDayMs(d));
+    const today = this.toDayMs(new Date());
 
-        const [y, m, d] = dateAttr.split('-').map(Number);
-        const cellMs = new Date(y, m, d).getTime(); // m is already correct (PrimeNG gives 0-based)
+    const yesterday = this.toDayMs(new Date(new Date().setDate(new Date().getDate() - 1)));
 
-        if (cellMs > startMs && cellMs < endMs) {
-          td.classList.add('range-middle');
-        }
-      });
+    const weekStart = this.toDayMs(this.getStartOfWeek(new Date()));
+    const weekEnd = this.toDayMs(
+      new Date(this.getStartOfWeek(new Date()).getTime() + 6 * 86400000)
+    );
+
+    const monthStart = this.toDayMs(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+
+    const monthEnd = this.toDayMs(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+
+    if (start === today && end === today) {
+      return { type: 'today' as QuickFilter, label: 'Today' };
+    }
+
+    if (start === yesterday && end === yesterday) {
+      return { type: 'yesterday' as QuickFilter, label: 'Yesterday' };
+    }
+
+    if (start === weekStart && end === weekEnd) {
+      return { type: 'week' as QuickFilter, label: 'Current week' };
+    }
+
+    if (start === monthStart && end === monthEnd) {
+      return { type: 'month' as QuickFilter, label: 'Current month' };
+    }
+
+    return null;
+  }
+
+  /* LABEL HELPERS */
+  get isSingleDate() {
+    const r = this.selectedRange();
+    if (!r || !r[0]) return false;
+    if (!r[1]) return true;
+    return this.toDayMs(r[0]) === this.toDayMs(r[1]);
+  }
+
+  formatLabel(d: Date) {
+    return d.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
     });
   }
 
-  private clearMiddleClasses() {
-    document
-      .querySelectorAll('td.p-datepicker-day-cell.range-middle')
-      .forEach(el => el.classList.remove('range-middle'));
+  formatRangeLabel(range: Date[]) {
+    return this.isSingleDate
+      ? this.formatLabel(range[0])
+      : `${this.formatLabel(range[0])} — ${this.formatLabel(range[1])}`;
   }
 
-  // ----------------------------------
-  // DATE HELPERS
-  // ----------------------------------
-  private startOfDay(date: Date) {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    return d;
+  /* DATE HELPERS */
+  private startOfDay(d: Date) {
+    const x = new Date(d);
+    x.setHours(0, 0, 0, 0);
+    return x;
   }
 
-  private endOfDay(date: Date) {
-    const d = new Date(date);
-    d.setHours(23, 59, 59, 999);
-    return d;
+  private endOfDay(d: Date) {
+    const x = new Date(d);
+    x.setHours(23, 59, 59, 999);
+    return x;
   }
 
-  private toDayMs(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  private toDayMs(d: Date) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   }
 
   private getStartOfWeek(date: Date) {
     const d = this.startOfDay(date);
-    d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // Monday = start
+    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
     return d;
   }
 }

@@ -1,7 +1,11 @@
+/* DEFAULT: allow compression & wrapping */
 .tx-row td {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: middle;
 }
 
+/* STATUS BADGES */
 .badge.completed {
   background: #e6f9f4;
   color: #12b981;
@@ -11,6 +15,9 @@
   background: #fff3e6;
   color: #f97316;
 }
+.pi.pi-circle-fill {
+  font-size: 10px;
+}
 
 .badge.failed {
   background: #feecec;
@@ -18,12 +25,10 @@
 }
 
 .flag {
-  text-align: center;
-  width: 20px;
-  height: 20px;
   border-radius: 50%;
 }
 
+/* AMOUNTS */
 .amount.positive {
   color: rgb(43, 43, 255);
   font-weight: 600;
@@ -34,6 +39,7 @@
   font-weight: 600;
 }
 
+/* CELL PADDING */
 .id,
 .date,
 .from,
@@ -44,4 +50,20 @@
 .amount,
 .fee {
   padding: 10px;
+}
+
+/* KEEP NUMBERS COMPACT */
+.id,
+.date,
+.amount,
+.fee,
+.currency {
+  white-space: nowrap;
+}
+
+/* ALLOW TEXT TO WRAP */
+.from,
+.to,
+.type {
+  white-space: normal;
 }

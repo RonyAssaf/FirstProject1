@@ -1,35 +1,38 @@
 .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid #e1e6ef;
   background: white;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
 }
 
+/* BACKDROP */
 .date-popup-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(2px);
-  z-index: 999;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ✅ POPUP CONTAINER */
+/* POPUP */
 .date-popup {
   background: #fff;
-  width: 950px;
-  height: 400px;
-  padding: 60px;
+  width: 960px;
+  padding: 48px 56px;
   border-radius: 16px;
   position: relative;
+  z-index: 1001;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* ✅ CLOSE BUTTON */
 .close-btn {
   position: absolute;
   top: 18px;
@@ -38,16 +41,15 @@
   background: transparent;
   font-size: 22px;
   cursor: pointer;
-  color: #999;
 }
 
-/* ✅ CONTENT STRUCTURE */
+/* CONTENT */
 .date-popup-content {
   display: flex;
   gap: 32px;
 }
 
-/* ✅ QUICK OPTIONS */
+/* QUICK FILTERS */
 .quick-options {
   width: 210px;
   border-right: 1px solid #e6e9ef;
@@ -58,125 +60,93 @@
     color: #555;
     cursor: pointer;
     margin-bottom: 18px;
-    transition: 0.2s;
-  }
-
-  p:hover {
-    color: #2563eb;
-  }
-
-  .active {
-    color: #2563eb;
-    font-weight: 600;
   }
 }
 
+/* INPUT BAR */
+.date-input-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.date-part {
+  min-width: 140px;
+  text-align: center;
+}
+
+.date-separator {
+  margin: 0 18px;
+  color: #9ca3af;
+}
+
+.single-date {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* CALENDAR */
 .calendar-box {
   flex: 1;
 }
 
-/* ✅ CALENDAR CORE */
 :host ::ng-deep .p-datepicker {
   width: 100%;
-  border: none !important;
-  box-shadow: none !important;
+  border: none;
 }
 
-:host ::ng-deep .p-datepicker-title {
-  font-size: 17px;
-  font-weight: 600;
-  margin-bottom: 14px;
+:host ::ng-deep .p-datepicker-calendar-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 48px;
 }
 
-:host ::ng-deep .p-datepicker-weekday {
-  color: #999;
-  font-size: 13px;
-  font-weight: 500;
+/* SELECTED DAY */
+:host ::ng-deep td.p-datepicker-day-cell[aria-selected='true'] .p-datepicker-day,
+:host ::ng-deep .p-datepicker-day.p-highlight {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-radius: 6px;
 }
 
-:host ::ng-deep .p-datepicker-day {
-  height: 30px;
-  width: 30px;
-  font-size: 20px;
-  color: #3c4a67;
+/* ACTIONS */
+.popup-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 22px;
 }
 
-/* ✅ HOVER */
-:host ::ng-deep .p-datepicker-day:hover {
-  background: #ff0000 !important;
-  color: yellow;
+.cancel {
+  background: #f1f4f9;
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: none;
 }
 
+.done {
+  background: #2563eb;
+  color: white;
+  padding: 10px 28px;
+  border-radius: 10px;
+  border: none;
+  margin-left: 12px;
+}
+
+.reset-period {
+  margin-left: auto;
+  color: #2563eb;
+  cursor: pointer;
+}
 /* ✅ SELECTED DAYS (START / END) */
 :host ::ng-deep td.p-datepicker-day-cell[aria-selected='true'] .p-datepicker-day,
 :host ::ng-deep .p-datepicker-day.p-highlight,
 :host ::ng-deep .p-datepicker-day.p-datepicker-day-selected {
   background: #2563eb !important;
   color: #fff !important;
-}
-
-/* ✅ CALENDAR SPACING */
-:host ::ng-deep .p-datepicker-calendar-container {
-  gap: 100px;
-}
-
-.p-datepicker-day-cell {
-  padding: 0px !important;
-}
-
-/* ✅ ACTION BUTTONS */
-.popup-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 26px;
-}
-
-.popup-actions .cancel {
-  background: #f1f4f9;
-  border: none;
-  padding: 12px 26px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.popup-actions .done {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 12px;
-}
-
-.right-actions {
-  margin-left: auto;
-}
-
-.reset-period {
-  color: #2563eb;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-/* ✅ CUSTOM NAV ARROWS */
-::ng-deep .p-datepicker-next-button svg {
-  position: fixed;
-  width: 30px;
-  z-index: 999;
-  background: #f1f4f9;
-  right: 23%;
-  top: 50%;
-}
-
-::ng-deep .p-datepicker-prev-button svg {
-  position: fixed;
-  width: 30px;
-  z-index: 999;
-  background: #f1f4f9;
-  left: 38%;
-  top: 50%;
 }

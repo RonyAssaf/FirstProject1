@@ -5,7 +5,12 @@
 
 .dashboard-content {
   flex: 1;
-  padding: 40px;
+  padding-top: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
   padding-left: 100px;
   background: #f7f9fc;
+}
+body {
+  margin: 0px !important;
 }
