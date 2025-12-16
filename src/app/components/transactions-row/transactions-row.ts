@@ -13,7 +13,9 @@ export class TransactionsRow {
   @Input({ required: true }) tx!: Tx;
 
   getFlagPath(currency: Tx['currency']): string {
-    switch (currency) {
+    const normalized = currency?.trim().toUpperCase();
+
+    switch (normalized) {
       case 'USD':
         return '/UsFlag.png';
       case 'EUR':
