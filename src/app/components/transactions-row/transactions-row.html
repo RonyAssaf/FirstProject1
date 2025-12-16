@@ -24,12 +24,10 @@
 </td>
 
 <td class="currency">
-  <span>{{ tx.currency }}</span>
-  <img
-    class="flag"
-    [src]="'https://flagcdn.com/w20/' + getFlagCode(tx.currency) + '.png'"
-    alt="flag"
-  />
+  <span class="FLAGS">
+    {{ tx.currency }}
+    <img class="flag" [src]="getFlagPath(tx.currency)" alt="{{ tx.currency }} flag"
+  /></span>
 </td>
 <td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
   {{ tx.total | number : '1.2-2' }}

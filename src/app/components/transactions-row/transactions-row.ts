@@ -12,16 +12,16 @@ import { CommonModule } from '@angular/common';
 export class TransactionsRow {
   @Input({ required: true }) tx!: Tx;
 
-  getFlagCode(currency: string): string {
+  getFlagPath(currency: Tx['currency']): string {
     switch (currency) {
       case 'USD':
-        return 'us';
+        return '/UsFlag.png';
       case 'EUR':
-        return 'eu';
+        return '/EuroFlag.png';
       case 'LBP':
-        return 'lb';
+        return '/LbFlag.png';
       default:
-        return 'us';
+        return '';
     }
   }
 }

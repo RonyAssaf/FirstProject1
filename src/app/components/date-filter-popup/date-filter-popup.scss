@@ -67,7 +67,7 @@
 .date-input-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   height: 44px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -104,15 +104,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 48px;
-}
-
-/* SELECTED DAY */
-:host ::ng-deep td.p-datepicker-day-cell[aria-selected='true'] .p-datepicker-day,
-:host ::ng-deep .p-datepicker-day.p-highlight {
-  background: #2563eb !important;
-  color: #ffffff !important;
-  border-radius: 6px;
+  gap: 70px;
 }
 
 /* ACTIONS */
@@ -149,4 +141,14 @@
 :host ::ng-deep .p-datepicker-day.p-datepicker-day-selected {
   background: #2563eb !important;
   color: #fff !important;
+}
+
+:host ::ng-deep .p-datepicker table td span.p-disabled {
+  color: grey !important; /* grey text */
+  cursor: not-allowed !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .p-datepicker table td span {
+  margin: 3px;
 }

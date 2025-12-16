@@ -1,84 +1,50 @@
 <div class="transactions-card">
-  <!-- ================= TOP BAR ================= -->
   <div class="topbar">
     <h2>Transactions</h2>
 
     <div class="topbar-actions">
-      <!-- SEARCH -->
       <div class="search-box">
         <span class="pi pi-search"></span>
-        <input type="text" placeholder="Search" />
+        <input
+          type="text"
+          placeholder="Search"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+        />
       </div>
 
-      <!-- PAGINATION -->
-      <button class="nav-btn" (click)="prevPage()" [disabled]="currentPage() === 0">
+      <!-- DATE NAVIGATION -->
+      <button class="nav-btn" (click)="previousDate()">
         <i class="pi pi-chevron-left"></i>
       </button>
-
-      <span class="page-indicator"> Page {{ currentPageDisplay() }} / {{ totalPages() }} </span>
-
-      <button
-        class="nav-btn"
-        (click)="nextPage()"
-        [disabled]="(currentPage() + 1) * rowsPerPage >= filteredTransactions().length"
-      >
+      <button class="nav-btn" (click)="nextDate()">
         <i class="pi pi-chevron-right"></i>
       </button>
 
-      <!-- DATE FILTER -->
-      <app-date-filter-popup (apply)="onApplyFilter($event)"></app-date-filter-popup>
+      <app-date-filter-popup
+        [range]="appliedRange()"
+        [filter]="appliedQuickFilter()"
+        (apply)="onApplyFilter($event)"
+      ></app-date-filter-popup>
 
-      <!-- CURRENCY FILTER -->
-      <button class="btn-outline">
-        <app-currency-filter-popup (apply)="onCurrencyFilter($event)" />
-      </button>
+      <app-currency-filter-popup (apply)="onCurrencyFilter($event)"></app-currency-filter-popup>
     </div>
   </div>
 
-  <!-- ================= TABLE ================= -->
   <div class="table-wrapper">
     <p-table [value]="paginatedTransactions()">
       <ng-template pTemplate="header">
         <tr>
-          <th (click)="sortBy('id')">
-            <span class="th-content">ID <i [class]="getSortIcon('id')"></i></span>
-          </th>
-
-          <th (click)="sortBy('date')">
-            <span class="th-content">Date <i [class]="getSortIcon('date')"></i></span>
-          </th>
-
-          <th (click)="sortBy('from')">
-            <span class="th-content">From <i [class]="getSortIcon('from')"></i></span>
-          </th>
-
-          <th (click)="sortBy('to')" class="too">
-            <span class="th-content">To <i [class]="getSortIcon('to')"></i></span>
-          </th>
-
-          <th (click)="sortBy('type')">
-            <span class="th-content"> Transaction Type <i [class]="getSortIcon('type')"></i> </span>
-          </th>
-
-          <th (click)="sortBy('status')" class="statuss">
-            <span class="th-content"> Status <i [class]="getSortIcon('status')"></i> </span>
-          </th>
-
-          <th (click)="sortBy('currency')">
-            <span class="th-content"> Currency <i [class]="getSortIcon('currency')"></i> </span>
-          </th>
-
-          <th (click)="sortBy('total')">
-            <span class="th-content"> Total Amount <i [class]="getSortIcon('total')"></i> </span>
-          </th>
-
-          <th (click)="sortBy('amount')">
-            <span class="th-content"> Amount <i [class]="getSortIcon('amount')"></i> </span>
-          </th>
-
-          <th (click)="sortBy('fee')">
-            <span class="th-content"> Fee <i [class]="getSortIcon('fee')"></i> </span>
-          </th>
+          <th (click)="sortBy('id')">ID <i [class]="getSortIcon('id')"></i></th>
+          <th (click)="sortBy('date')">Date <i [class]="getSortIcon('date')"></i></th>
+          <th (click)="sortBy('from')">From<i [class]="getSortIcon('from')"></i></th>
+          <th (click)="sortBy('to')">To<i [class]="getSortIcon('to')"></i></th>
+          <th (click)="sortBy('type')">Type<i [class]="getSortIcon('type')"></i></th>
+          <th (click)="sortBy('status')">Status<i [class]="getSortIcon('status')"></i></th>
+          <th (click)="sortBy('currency')">Currency<i [class]="getSortIcon('currency')"></i></th>
+          <th (click)="sortBy('total')">Total<i [class]="getSortIcon('total')"></i></th>
+          <th (click)="sortBy('amount')">Amount<i [class]="getSortIcon('amount')"></i></th>
+          <th (click)="sortBy('fee')">Fee<i [class]="getSortIcon('fee')"></i></th>
         </tr>
       </ng-template>
 
@@ -86,5 +52,18 @@
         <tr app-transactions-row [tx]="tx"></tr>
       </ng-template>
     </p-table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination-footer">
+    <button class="nav-btn" (click)="prevPage()" [disabled]="currentPage() === 0">
+      <i class="pi pi-chevron-left"></i>
+    </button>
+
+    <span class="page-indicator"> Page {{ currentPageDisplay() }} / {{ totalPages() }} </span>
+
+    <button class="nav-btn" (click)="nextPage()" [disabled]="currentPage() + 1 >= totalPages()">
+      <i class="pi pi-chevron-right"></i>
+    </button>
   </div>
 </div>

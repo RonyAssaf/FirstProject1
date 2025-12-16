@@ -24,10 +24,6 @@
   color: #ef4444;
 }
 
-.flag {
-  border-radius: 50%;
-}
-
 /* AMOUNTS */
 .amount.positive {
   color: rgb(43, 43, 255);
@@ -66,4 +62,19 @@
 .to,
 .type {
   white-space: normal;
+}
+.currency {
+  gap: 6px;
+}
+
+.flag {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.FLAGS {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 56px;
 }

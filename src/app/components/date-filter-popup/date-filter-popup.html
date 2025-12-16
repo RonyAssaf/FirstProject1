@@ -1,48 +1,52 @@
 <button class="btn-outline" (click)="toggle()">
   <i class="pi pi-calendar"></i>
-  {{ triggerLabel() }}
+  {{ label }}
 </button>
 
-<div class="date-popup-backdrop" *ngIf="show()" (click)="close()">
+<div class="date-popup-backdrop" *ngIf="show" (click)="close()">
   <div class="date-popup" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="close()">✕</button>
 
     <div class="date-popup-content">
       <div class="quick-options">
-        <p (click)="filterToday()">Today</p>
-        <p (click)="filterYesterday()">Yesterday</p>
-        <p (click)="filterCurrentWeek()">Current week</p>
-        <p (click)="filterCurrentMonth()">Current month</p>
-        <p (click)="resetPeriod()">Start of account</p>
+        <p (click)="applyToday()">Today</p>
+        <p (click)="applyYesterday()">Yesterday</p>
+        <p (click)="applyCurrentWeek()">Current week</p>
+        <p (click)="applyCurrentMonth()">Current month</p>
+        <p>Start of account</p>
       </div>
 
       <div class="calendar-box">
         <div class="date-input-bar">
-          <ng-container *ngIf="isSingleDate; else rangeMode">
+          <!-- SINGLE DATE (Today / Yesterday) -->
+          <ng-container
+            *ngIf="tempRange.length === 1 || isSameDay(tempRange[0], tempRange[1]); else rangeMode"
+          >
             <span class="single-date">
-              {{ selectedRange()?.[0] && formatLabel(selectedRange()![0]) }}
+              {{ tempRange[0] ? format(tempRange[0]) : '' }}
             </span>
           </ng-container>
 
+          <!-- RANGE MODE -->
           <ng-template #rangeMode>
             <span class="date-part">
-              {{ selectedRange()?.[0] ? formatLabel(selectedRange()![0]) : 'Start date' }}
+              {{ tempRange[0] ? format(tempRange[0]) : 'Start date' }}
             </span>
             <span class="date-separator">—</span>
             <span class="date-part">
-              {{ selectedRange()?.[1] ? formatLabel(selectedRange()![1]) : 'End date' }}
+              {{ tempRange[1] ? format(tempRange[1]) : '' }}
             </span>
           </ng-template>
         </div>
 
         <p-datepicker
-          [ngModel]="selectedRange()"
-          (ngModelChange)="selectedRange.set($event)"
+          [(ngModel)]="tempRange"
           selectionMode="range"
           [inline]="true"
           [numberOfMonths]="2"
           [firstDayOfWeek]="1"
           [showOtherMonths]="false"
+          [maxDate]="today"
         ></p-datepicker>
 
         <div class="popup-actions">

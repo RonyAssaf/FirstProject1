@@ -1,27 +1,82 @@
-<button class="btn-outline" (click)="toggle()"><i class="pi pi-align-center"></i> Filters</button>
+<button class="btn-outline" (click)="toggle()">
+  <i class="pi pi-align-center"></i>
+  Filters
+</button>
 
 @if (isOpen()) {
 <div class="backdrop" (click)="toggle()">
   <div class="popup" (click)="$event.stopPropagation()">
     <div class="header">
-      <h3>Currency</h3>
+      <h3>Filters</h3>
       <i class="pi pi-times close" (click)="toggle()"></i>
     </div>
 
-    <label class="option">
-      <input type="checkbox" [checked]="selectedCurrency() === 'USD'" (change)="select('USD')" />
-      USD
-    </label>
+    <!-- ✅ 2-column layout -->
+    <div class="filters-grid">
+      <!-- LEFT: Currency -->
+      <div class="section">
+        <h4 class="section-title">Currency</h4>
 
-    <label class="option">
-      <input type="checkbox" [checked]="selectedCurrency() === 'LBP'" (change)="select('LBP')" />
-      LBP
-    </label>
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedCurrencies().includes('USD')"
+            (change)="toggleCurrency('USD')"
+          />
+          USD
+        </label>
 
-    <label class="option">
-      <input type="checkbox" [checked]="selectedCurrency() === 'EUR'" (change)="select('EUR')" />
-      EUR
-    </label>
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedCurrencies().includes('LBP')"
+            (change)="toggleCurrency('LBP')"
+          />
+          LBP
+        </label>
+
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedCurrencies().includes('EUR')"
+            (change)="toggleCurrency('EUR')"
+          />
+          EUR
+        </label>
+      </div>
+
+      <!-- RIGHT: Status -->
+      <div class="section">
+        <h4 class="section-title">Status</h4>
+
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedStatuses().includes('Completed')"
+            (change)="toggleStatus('Completed')"
+          />
+          Completed
+        </label>
+
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedStatuses().includes('Pending')"
+            (change)="toggleStatus('Pending')"
+          />
+          Pending
+        </label>
+
+        <label class="option">
+          <input
+            type="checkbox"
+            [checked]="selectedStatuses().includes('Failed')"
+            (change)="toggleStatus('Failed')"
+          />
+          Failed
+        </label>
+      </div>
+    </div>
 
     <div class="footer">
       <button class="done" (click)="onDone()">Done</button>

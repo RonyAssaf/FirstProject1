@@ -17,7 +17,7 @@ export class Transactions implements OnInit {
   constructor(private txService: TransactionsService) {}
 
   ngOnInit(): void {
-    this.txService.getFakeTransactions().subscribe((data) => {
+    this.txService.getTransactions().subscribe((data) => {
       this.transactions = data;
     });
   }
