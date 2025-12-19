@@ -9,11 +9,19 @@
 
     <div class="date-popup-content">
       <div class="quick-options">
-        <p (click)="applyToday()">Today</p>
-        <p (click)="applyYesterday()">Yesterday</p>
-        <p (click)="applyCurrentWeek()">Current week</p>
-        <p (click)="applyCurrentMonth()">Current month</p>
-        <p>Start of account</p>
+        <p (click)="applyToday()" [class.active]="selectedQuick === 'today'">Today</p>
+
+        <p (click)="applyYesterday()" [class.active]="selectedQuick === 'yesterday'">Yesterday</p>
+
+        <p (click)="applyCurrentWeek()" [class.active]="selectedQuick === 'week'">Current week</p>
+
+        <p (click)="applyCurrentMonth()" [class.active]="selectedQuick === 'month'">
+          Current month
+        </p>
+
+        <p (click)="applyStartOfAccount()" [class.active]="selectedQuick === 'start'">
+          Start of account
+        </p>
       </div>
 
       <div class="calendar-box">

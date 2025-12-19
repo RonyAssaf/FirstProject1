@@ -1,5 +1,17 @@
 <div class="header-transactions">
-  <span class="header-title">{{ title }}</span>
+  <nav class="breadcrumb">
+    <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+      <a *ngIf="!last" (click)="goBack()" class="breadcrumb-link">
+        {{ crumb.label }}
+      </a>
+
+      <span *ngIf="last" class="breadcrumb-current">
+        {{ crumb.label }}
+      </span>
+
+      <span *ngIf="!last"> &gt; </span>
+    </ng-container>
+  </nav>
 
   <button class="header-bell" type="button">
     <i class="pi pi-bell"></i>

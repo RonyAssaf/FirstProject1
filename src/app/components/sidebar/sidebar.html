@@ -1,29 +1,45 @@
 <div class="sidebar">
-  <div class="logo">
+  <!-- TOP -->
+  <div class="sidebar-top">
     <img src="logo.svg" alt="Logo" class="logo" />
     <div class="business">Business</div>
 
-    <nav>
-      <a (click)="onSelect('Dashboard')"><i class="pi pi-server"></i>Dashboard</a>
-      <a (click)="onSelect('Overview')"><i class="pi pi-book"></i>Overview</a>
-      <a (click)="onSelect('Payroll Payment')"
-        ><i class="pi pi-file-arrow-up"></i>Payroll Payment</a
+    <nav class="sidebar-nav">
+      <a (click)="onSelect('Dashboard')" [class.active]="selected === 'Dashboard'">
+        <i class="pi pi-home"></i>Dashboard
+      </a>
+
+      <a (click)="onSelect('Overview')" [class.active]="selected === 'Overview'">
+        <i class="pi pi-book"></i>Overview
+      </a>
+
+      <a (click)="onSelect('Payroll Payment')" [class.active]="selected === 'Payroll Payment'">
+        <i class="pi pi-wallet"></i>Payroll Payment
+      </a>
+
+      <a
+        (click)="onSelect('Wallet Mass Payment')"
+        [class.active]="selected === 'Wallet Mass Payment'"
       >
-      <a (click)="onSelect('Wallet Mass Payment')"
-        ><i class="pi pi-file-arrow-up"></i>Wallet Mass Payment</a
-      >
-      <a class="active" (click)="onSelect('Transactions')"
+        <i class="pi pi-wallet"></i>Wallet Mass Payment
+      </a>
+
+      <a (click)="onSelect('Transactions')" [class.active]="selected === 'Transactions'"
         ><i class="pi pi-chart-bar"></i>Transactions</a
       >
-      <a (click)="onSelect('Wallet Transfers')"
-        ><i class="pi pi-arrow-up-right"></i>Wallet Transfers</a
-      >
+
+      <a (click)="onSelect('Wallet Transfers')" [class.active]="selected === 'Wallet Transfers'">
+        <i class="pi pi-arrow-up-right"></i>Wallet Transfers
+      </a>
     </nav>
+  </div>
 
-    <p class="version">Version 1.1.9-develop</p>
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+    <div class="version">Version 1.1.9-develop</div>
+
     <div class="sidebar-profile">
-      <img src="https://i.pravatar.cc/60" alt="Profile" class="profile-avatar" />
-
+      <img src="https://i.pravatar.cc/60" class="profile-avatar" />
       <div class="profile-info">
         <div class="profile-name">Monty Finance</div>
         <div class="profile-handle">@haysam</div>

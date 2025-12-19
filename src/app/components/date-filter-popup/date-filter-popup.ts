@@ -13,7 +13,7 @@ import {
   min,
 } from 'date-fns';
 
-export type QuickFilter = 'today' | 'yesterday' | 'week' | 'month' | 'custom';
+export type QuickFilter = 'today' | 'yesterday' | 'week' | 'month' | 'custom' | 'all'; // ✅ NEW
 
 @Component({
   selector: 'app-date-filter-popup',
@@ -23,12 +23,16 @@ export type QuickFilter = 'today' | 'yesterday' | 'week' | 'month' | 'custom';
   styleUrl: './date-filter-popup.scss',
 })
 export class DateFilterPopup {
+  selectedQuick: 'today' | 'yesterday' | 'week' | 'month' | 'start' | null = 'today';
   @Input() range!: Date[];
   @Input() filter!: QuickFilter;
   today = startOfDay(new Date());
 
-  @Output() apply = new EventEmitter<{ filter: QuickFilter; range: Date[] }>();
-
+  @Output() apply = new EventEmitter<{
+    filter: QuickFilter;
+    range: Date[];
+    allTime?: boolean;
+  }>();
   show = false;
 
   /** TEMP RANGE shown in calendar */
@@ -50,18 +54,21 @@ export class DateFilterPopup {
   /* ================= QUICK FILTERS  ================= */
 
   applyToday() {
+    this.selectedQuick = 'today';
     const today = startOfDay(new Date());
     this.tempRange = [today, today];
     this.tempFilter = 'today';
   }
 
   applyYesterday() {
+    this.selectedQuick = 'yesterday';
     const yesterday = addDays(startOfDay(new Date()), -1);
     this.tempRange = [yesterday, yesterday];
     this.tempFilter = 'yesterday';
   }
 
   applyCurrentWeek() {
+    this.selectedQuick = 'week';
     const start = startOfWeek(new Date(), { weekStartsOn: 1 }); // ISO week
     const end = addDays(start, 6);
     this.tempRange = [startOfDay(start), startOfDay(end)];
@@ -69,6 +76,7 @@ export class DateFilterPopup {
   }
 
   applyCurrentMonth() {
+    this.selectedQuick = 'month';
     const today = startOfDay(new Date());
 
     const start = startOfDay(startOfMonth(today));
@@ -97,10 +105,21 @@ export class DateFilterPopup {
 
     this.close();
   }
+  applyStartOfAccount() {
+    this.selectedQuick = 'start';
+    this.apply.emit({
+      filter: 'all',
+      range: [], // 🔥 explicitly empty
+      allTime: true,
+    });
+
+    this.close();
+  }
 
   /* ================= LABEL ================= */
 
   get label() {
+    if (this.filter === 'all') return 'Start of account';
     if (this.filter === 'today') return 'Today';
     if (this.filter === 'yesterday') return 'Yesterday';
     if (this.filter === 'week') return 'Current week';
@@ -121,6 +140,8 @@ export class DateFilterPopup {
   /* ================= RESET ================= */
 
   resetPeriod() {
+    this.selectedQuick = null;
+
     const today = startOfDay(new Date());
 
     this.apply.emit({

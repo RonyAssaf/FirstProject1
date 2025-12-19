@@ -1,6 +1,8 @@
 .dashboard-layout {
-  display: flex;
-  background: #f7f9fc;
+  --sidebar-width: 240px;
+}
+.sidebar {
+  width: var(--sidebar-width);
 }
 
 .dashboard-content {
@@ -9,7 +11,9 @@
   padding-left: 40px;
   padding-right: 40px;
   padding-left: 100px;
-  background: #f7f9fc;
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+  background-color: rgb(236, 236, 238);
 }
 body {
   margin: 0px !important;

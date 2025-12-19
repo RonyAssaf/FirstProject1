@@ -1,8 +1,8 @@
 <div class="dashboard-layout">
-  <app-sidebar (sectionChange)="currentSection = $event"></app-sidebar>
+  <app-sidebar (sectionChange)="currentSection = $event" class="sidebar"></app-sidebar>
 
   <div class="dashboard-content">
-    <app-header-transactions [title]="currentSection"></app-header-transactions>
+    <app-header-transactions />
 
     <app-transactions-table [transactions]="transactions"> </app-transactions-table>
   </div>

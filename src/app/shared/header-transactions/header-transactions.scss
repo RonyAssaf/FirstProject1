@@ -20,3 +20,24 @@
     color: #0b57d0;
   }
 }
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb-link {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: #6b7280;
+  font-weight: 500;
+  cursor: default;
+}

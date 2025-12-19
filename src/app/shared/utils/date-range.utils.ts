@@ -45,9 +45,7 @@ export function deriveQuickFilter(range: Date[]): QuickFilter {
   if (isSameDay(s, weekStart) && isSameDay(e, weekEnd)) return 'week';
 
   const monthStart = startOfMonth(today);
-  const monthEnd = endOfMonth(today);
-
-  if (isSameDay(s, monthStart) && isSameDay(e, monthEnd)) return 'month';
+  if (isSameDay(s, monthStart) && isSameDay(e, today)) return 'month';
 
   return 'custom';
 }

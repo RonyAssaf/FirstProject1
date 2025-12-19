@@ -21,22 +21,44 @@
   align-items: center;
   justify-content: center;
 }
-
 /* POPUP */
 .date-popup {
   background: #fff;
-  width: 960px;
-  padding: 48px 56px;
+  width: 1200px;
+  height: 500px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 15px;
   border-radius: 16px;
   position: relative;
   z-index: 1001;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+:host ::ng-deep .p-datepicker-next-button {
+  position: absolute;
+  top: 175px;
+  right: -50px;
+  background-color: rgb(236, 235, 235);
+
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+}
+:host ::ng-deep .p-datepicker-prev-button {
+  position: absolute;
+  top: 175px;
+  left: 10px;
+  background-color: rgb(236, 235, 235);
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+}
+
 .close-btn {
   position: absolute;
-  top: 18px;
-  right: 22px;
+  top: 12px;
+  right: 10px;
   border: none;
   background: transparent;
   font-size: 22px;
@@ -46,7 +68,18 @@
 /* CONTENT */
 .date-popup-content {
   display: flex;
-  gap: 32px;
+  gap: 20px;
+}
+
+:host ::ng-deep .p-datepicker-weekday-cell {
+  height: 45px;
+  color: rgb(200, 191, 191);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 0;
+}
+:host ::ng-deep .p-datepicker-weekday-cell::first-letter {
+  font-size: 12px;
 }
 
 /* QUICK FILTERS */
@@ -68,21 +101,10 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 44px;
+  height: 52px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-  margin-bottom: 18px;
   font-size: 14px;
-}
-
-.date-part {
-  min-width: 140px;
-  text-align: center;
-}
-
-.date-separator {
-  margin: 0 18px;
-  color: #9ca3af;
 }
 
 .single-date {
@@ -96,38 +118,45 @@
 }
 
 :host ::ng-deep .p-datepicker {
-  width: 100%;
   border: none;
 }
-
+:host ::ng-deep .p-datepicker-panel {
+  height: 350px;
+}
+:host ::ng-deep .p-datepicker-header {
+  padding-top: 30px;
+}
 :host ::ng-deep .p-datepicker-calendar-container {
-  width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 70px;
+  gap: 150px;
 }
 
 /* ACTIONS */
 .popup-actions {
   display: flex;
   align-items: center;
-  margin-top: 22px;
+  margin-top: 14px;
 }
 
 .cancel {
   background: #f1f4f9;
-  padding: 10px 24px;
+  padding: 15px 30px;
   border-radius: 10px;
   border: none;
+  box-shadow: 0 5px 9px rgba(3, 3, 3, 0.08);
+  cursor: pointer;
 }
 
 .done {
-  background: #2563eb;
+  background: #124cc9;
   color: white;
-  padding: 10px 28px;
+  box-shadow: 0 2px 7px rgba(47, 92, 255, 0.35);
+  padding: 15px 28px;
   border-radius: 10px;
   border: none;
   margin-left: 12px;
+  cursor: pointer;
 }
 
 .reset-period {
@@ -145,10 +174,30 @@
 
 :host ::ng-deep .p-datepicker table td span.p-disabled {
   color: grey !important; /* grey text */
-  cursor: not-allowed !important;
-  background: transparent !important;
+}
+
+:host ::ng-deep .p-datepicker-calendar-container {
+  padding-left: 80px;
 }
 
 :host ::ng-deep .p-datepicker table td span {
-  margin: 3px;
+  height: 40px;
+  width: 40px;
+  margin: 1px;
+  padding: 3px;
+}
+.quick-options p {
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.quick-options p:hover {
+  background: #f3f6fc;
+}
+
+.quick-options p.active {
+  background: #eef4ff; /* light blue */
+  color: #184199;
+  font-weight: 600;
 }

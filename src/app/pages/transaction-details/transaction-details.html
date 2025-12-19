@@ -1,0 +1,27 @@
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <app-sidebar class="sidebar"></app-sidebar>
+
+  <!-- MAIN CONTENT -->
+  <div class="dashboard-content">
+    <!-- HEADER -->
+    <app-header-transactions></app-header-transactions>
+
+    <!-- PAGE CONTENT -->
+    <div class="details-card">
+      <h2 class="details-title">
+        <i class="pi pi-angle-left"></i>
+        Transaction Details
+      </h2>
+
+      <div class="details-row" *ngFor="let d of details">
+        <div class="label">
+          <i [class]="d.icon"></i>
+          <span>{{ d.label }}</span>
+        </div>
+
+        <span class="value" [class.fee-value]="d.isFee">{{ d.value }}</span>
+      </div>
+    </div>
+  </div>
+</div>
