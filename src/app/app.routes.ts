@@ -26,7 +26,7 @@ export const routes: Routes = [
         path: ':id',
         component: TransactionDetails,
         data: {
-          breadcrumb: (route: any) => `Transaction ${route.params['id']}`,
+          breadcrumb: (route: any) => `Transaction-details ${route.params['id']}`,
         },
       },
     ],
