@@ -1,7 +1,7 @@
 <div class="header-transactions">
   <nav class="breadcrumb">
     <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
-      <a *ngIf="!last" (click)="goBack()" class="breadcrumb-link">
+      <a *ngIf="!last && crumb.route" [routerLink]="crumb.route" class="breadcrumb-link">
         {{ crumb.label }}
       </a>
 

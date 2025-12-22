@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
-import { Location } from '@angular/common';
 
 export interface BreadcrumbItem {
   label: string;
@@ -19,36 +18,41 @@ export interface BreadcrumbItem {
 export class HeaderTransactions {
   breadcrumbs: BreadcrumbItem[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute, private location: Location) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
       this.breadcrumbs = this.buildBreadcrumbs(this.route.root);
     });
   }
-
   private buildBreadcrumbs(
     route: ActivatedRoute,
     url = '',
     crumbs: BreadcrumbItem[] = []
   ): BreadcrumbItem[] {
-    const child = route.firstChild;
-    if (!child) return crumbs;
+    const children = route.children;
+    if (!children || children.length === 0) return crumbs;
 
-    const segment = child.snapshot.url.map((s) => s.path).join('/');
-    if (segment) url += `/${segment}`;
+    for (const child of children) {
+      const segment = child.snapshot.url.map((s) => s.path).join('/');
 
-    const breadcrumb = child.snapshot.data['breadcrumb'];
+      // Only advance URL if there is a real segment
+      const nextUrl = segment ? `${url}/${segment}` : url;
 
-    // ✅ IMPORTANT: execute breadcrumb function
-    const label = typeof breadcrumb === 'function' ? breadcrumb(child.snapshot) : breadcrumb;
+      const breadcrumb = child.snapshot.data['breadcrumb'];
+      const label = typeof breadcrumb === 'function' ? breadcrumb(child.snapshot) : breadcrumb;
 
-    // 🚫 Skip empty-path duplication
-    if (label && segment) {
-      crumbs.push({ label, route: url });
+      // ✅ Only push breadcrumb if:
+      // - it has a label
+      // - AND it actually represents a navigable URL
+      if (label && segment) {
+        crumbs.push({
+          label,
+          route: nextUrl,
+        });
+      }
+
+      return this.buildBreadcrumbs(child, nextUrl, crumbs);
     }
 
-    return this.buildBreadcrumbs(child, url, crumbs);
-  }
-  goBack() {
-    this.location.back();
+    return crumbs;
   }
 }

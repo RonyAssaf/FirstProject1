@@ -1,0 +1,23 @@
+<div class="dashboard-layout">
+  <app-sidebar class="sidebar"></app-sidebar>
+
+  <div class="dashboard-content">
+    <app-header-transactions></app-header-transactions>
+    <div class="header">
+      <p class="transfers">Transfers</p>
+      <p>
+        <button class="history"><i class="pi pi-clock"></i>History</button>
+      </p>
+    </div>
+    <div class="transfers-layout">
+      <div class="transfers-menu">
+        <app-wallet-transfer-menu></app-wallet-transfer-menu>
+        <app-test-1></app-test-1>
+        <app-test-2></app-test-2>
+      </div>
+      <div class="transfers-content">
+        <app-send-wallet-transfer></app-send-wallet-transfer>
+      </div>
+    </div>
+  </div>
+</div>

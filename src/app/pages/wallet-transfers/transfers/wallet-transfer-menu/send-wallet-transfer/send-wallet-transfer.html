@@ -1,0 +1,65 @@
+<div class="send-wallet-transfer">
+  <h2 class="title">Send from Wallet</h2>
+
+  <form class="form">
+    <!-- Currency -->
+    <div class="field">
+      <label>Currency</label>
+      <select>
+        <option>Select Currency</option>
+      </select>
+    </div>
+
+    <!-- Amount -->
+    <div class="field">
+      <label>Amount</label>
+      <input type="number" placeholder="Enter amount" />
+    </div>
+
+    <!-- Recipient Type -->
+    <div class="field">
+      <label>Recipient Type</label>
+
+      <div class="radio-group">
+        <label class="radio">
+          <input type="radio" checked />
+          <span>Individual</span>
+        </label>
+
+        <label class="radio">
+          <input type="radio" />
+          <span>Business</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="field">
+      <label>Beneficiary Mobile Number</label>
+      <input type="text" placeholder="+961" />
+    </div>
+
+    <!-- Name -->
+    <div class="field">
+      <label>Beneficiary Name</label>
+      <input type="text" />
+    </div>
+
+    <!-- Reason -->
+    <div class="field">
+      <label>Transfer Reason</label>
+      <input type="text" />
+    </div>
+
+    <!-- Info -->
+    <div class="info">
+      <i class="pi pi-info-circle"></i>
+      <span> The receiver has 24 hours to accept or reject the transfer before it expires. </span>
+    </div>
+
+    <!-- Action -->
+    <div class="actions">
+      <button type="button" disabled class="continue-btn">Continue</button>
+    </div>
+  </form>
+</div>

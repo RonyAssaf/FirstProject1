@@ -1,0 +1,51 @@
+.wallet-transfer-menu {
+  width: 320px;
+  padding: 12px;
+}
+
+/* BLUE CARD */
+.wallet-transfer-card {
+  display: flex;
+  gap: 16px;
+  height: 80px;
+
+  padding: 16px 18px;
+  border-radius: 12px;
+  background-color: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* ICON */
+.icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-wrapper i {
+  font-size: 16px;
+}
+
+/* TEXT */
+.text-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.description {
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}

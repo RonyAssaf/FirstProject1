@@ -1,0 +1,50 @@
+.dashboard-content {
+  flex: 1;
+  height: 100vh;
+  padding-top: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 750px;
+  margin-left: var(--sidebar-width);
+  background-color: rgb(236, 236, 238);
+}
+.pi.pi-clock {
+  padding-right: 15px;
+  font-size: 15px;
+}
+.dashboard-layout {
+  --sidebar-width: 240px;
+}
+.header.transfers {
+  font-weight: 800;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+}
+
+.transfers-layout {
+  display: flex;
+  gap: 0px;
+}
+
+.transfers-content {
+  flex: 1;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15px;
+  text-align: center;
+  button {
+    background-color: blue;
+    height: 50px;
+    width: 120px;
+    color: white;
+    border-radius: 10px;
+    border: none;
+  }
+}
+.history {
+  gap: 20px;
+}

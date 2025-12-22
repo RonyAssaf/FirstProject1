@@ -1,17 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class Sidebar {
-  @Output() sectionChange = new EventEmitter<string>();
-
-  selected: string = 'Transactions'; // default selected
-
-  onSelect(section: string) {
-    this.selected = section;
-    this.sectionChange.emit(section);
-  }
-}
+export class Sidebar {}

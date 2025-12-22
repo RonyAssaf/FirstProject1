@@ -5,30 +5,23 @@
     <div class="business">Business</div>
 
     <nav class="sidebar-nav">
-      <a (click)="onSelect('Dashboard')" [class.active]="selected === 'Dashboard'">
-        <i class="pi pi-home"></i>Dashboard
-      </a>
+      <a routerLink="/dashboard" routerLinkActive="active"> <i class="pi pi-home"></i>Dashboard </a>
 
-      <a (click)="onSelect('Overview')" [class.active]="selected === 'Overview'">
-        <i class="pi pi-book"></i>Overview
-      </a>
+      <a routerLink="/overview" routerLinkActive="active"> <i class="pi pi-book"></i>Overview </a>
 
-      <a (click)="onSelect('Payroll Payment')" [class.active]="selected === 'Payroll Payment'">
+      <a routerLink="/payroll-payment" routerLinkActive="active">
         <i class="pi pi-wallet"></i>Payroll Payment
       </a>
 
-      <a
-        (click)="onSelect('Wallet Mass Payment')"
-        [class.active]="selected === 'Wallet Mass Payment'"
-      >
+      <a routerLink="/wallet-mass-payment" routerLinkActive="active">
         <i class="pi pi-wallet"></i>Wallet Mass Payment
       </a>
 
-      <a (click)="onSelect('Transactions')" [class.active]="selected === 'Transactions'"
-        ><i class="pi pi-chart-bar"></i>Transactions</a
-      >
+      <a routerLink="/transactions" routerLinkActive="active">
+        <i class="pi pi-chart-bar"></i>Transactions
+      </a>
 
-      <a (click)="onSelect('Wallet Transfers')" [class.active]="selected === 'Wallet Transfers'">
+      <a routerLink="/transfers" routerLinkActive="active">
         <i class="pi pi-arrow-up-right"></i>Wallet Transfers
       </a>
     </nav>
