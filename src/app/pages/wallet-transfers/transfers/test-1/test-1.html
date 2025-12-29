@@ -1,5 +1,5 @@
 <div class="wallet-transfer-menu">
-  <div class="wallet-transfer-card" routerLink="/transfers/test-1/test-11">
+  <div class="wallet-transfer-card" (click)="goToTest11()" [class.active]="isActive()">
     <div class="icon-wrapper">
       <i class="pi pi-send"></i>
     </div>

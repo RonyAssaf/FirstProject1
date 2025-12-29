@@ -10,19 +10,8 @@ import { SendWalletTransfer } from './wallet-transfer-menu/send-wallet-transfer/
 
 @Component({
   selector: 'app-transfers',
-  imports: [
-    Sidebar,
-    HeaderTransactions,
-    WalletTransferMenu,
-    Test1,
-    Test2,
-    RouterOutlet,
-    SendWalletTransfer,
-  ],
+  imports: [Sidebar, HeaderTransactions, WalletTransferMenu, Test1, Test2, RouterOutlet],
   templateUrl: './transfers.html',
   styleUrl: './transfers.scss',
 })
-export class Transfers {
-  currentSection = 'Transactions';
-  transactions: Tx[] = [];
-}
+export class Transfers {}

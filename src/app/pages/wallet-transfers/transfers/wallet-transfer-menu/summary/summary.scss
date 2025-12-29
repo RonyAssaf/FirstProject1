@@ -1,0 +1,98 @@
+.summary-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  background-color: white;
+}
+
+.summary-card {
+  width: 720px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .back-btn {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: #6b7280;
+  }
+}
+
+.summary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 0 0 1px #eef1f6;
+  padding: 20px;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eef1f6;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.total {
+      font-weight: 600;
+    }
+  }
+
+  .label {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .value {
+    font-size: 14px;
+    color: #111827;
+  }
+
+  .fee {
+    color: #ef4444;
+  }
+}
+
+.summary-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .cancel-btn {
+    background: #eef1f6;
+    border: none;
+    color: #6b7280;
+  }
+
+  .confirm-btn {
+    background: #2563eb;
+    border: none;
+    color: white;
+  }
+}

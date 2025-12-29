@@ -3,16 +3,21 @@
   padding: 12px;
 }
 
-/* BLUE CARD */
 .wallet-transfer-card {
   display: flex;
   gap: 16px;
-  height: 80px;
   padding: 16px 18px;
   border-radius: 12px;
-  background-color: #2563eb;
-  color: #ffffff;
   cursor: pointer;
+  background: white;
+  color: #1f2937;
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+}
+.wallet-transfer-card.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 
 /* ICON */

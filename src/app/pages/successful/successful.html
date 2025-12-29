@@ -1,0 +1,22 @@
+<div class="success-page">
+  <div class="success-content">
+    <!-- Image -->
+    <div class="image-wrapper">
+      <img src="assets/success-transfer.png" alt="Transfer Success" />
+    </div>
+
+    <!-- Title -->
+    <h2>Your Transfer Request has<br />been successfully sent!</h2>
+
+    <!-- Description -->
+    <p>
+      We’ll notify
+      <strong>{{ beneficiaryName }}</strong>
+      of the transfer. {{ beneficiaryName }}
+      has 24 hours to respond to your request before it expires.
+    </p>
+
+    <!-- Action -->
+    <button class="dashboard-btn" (click)="goToWalletTransfers()">Go to Dashboard</button>
+  </div>
+</div>

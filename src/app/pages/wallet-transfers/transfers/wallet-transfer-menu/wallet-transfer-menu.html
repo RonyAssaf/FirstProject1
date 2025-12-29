@@ -1,5 +1,6 @@
 <div class="wallet-transfer-menu">
-  <div class="wallet-transfer-card">
+  <!-- MENU CARD -->
+  <div class="wallet-transfer-card" (click)="goToSendWalletTransfer()" [class.active]="isActive()">
     <div class="icon-wrapper">
       <i class="pi pi-send"></i>
     </div>

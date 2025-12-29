@@ -3,20 +3,23 @@
 
   <div class="dashboard-content">
     <app-header-transactions></app-header-transactions>
+
     <div class="header">
       <p class="transfers">Transfers</p>
-      <p>
-        <button class="history"><i class="pi pi-clock"></i>History</button>
-      </p>
+      <button class="history"><i class="pi pi-clock"></i>History</button>
     </div>
+
     <div class="transfers-layout">
+      <!-- LEFT MENU (STATIC) -->
       <div class="transfers-menu">
         <app-wallet-transfer-menu></app-wallet-transfer-menu>
         <app-test-1></app-test-1>
         <app-test-2></app-test-2>
       </div>
+
+      <!-- RIGHT CONTENT (ROUTED) -->
       <div class="transfers-content">
-        <app-send-wallet-transfer></app-send-wallet-transfer>
+        <router-outlet></router-outlet>
       </div>
     </div>
   </div>

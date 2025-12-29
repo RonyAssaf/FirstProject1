@@ -13,6 +13,12 @@
   padding-top: 16px;
   margin-bottom: 16px;
 }
+::ng-deep .phone-wrapper .tel .iti__tel-input {
+  height: 35px;
+  width: 1225px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
 
 .form {
   flex: 1; /* 🔥 takes remaining height */
@@ -41,7 +47,6 @@ select {
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   font-size: 14px;
-  background: #ffffff;
 }
 
 input::placeholder {
@@ -80,7 +85,7 @@ input::placeholder {
 }
 
 /* ================= BUTTON ================= */
-.continue-btn {
+.continue-btn:disabled {
   padding: 12px 32px;
   border-radius: 10px;
   background: #2563eb;
@@ -90,4 +95,58 @@ input::placeholder {
   font-weight: 500;
   opacity: 0.4;
   cursor: not-allowed;
+}
+.continue-btn:enabled {
+  padding: 12px 32px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.4;
+  pointer-events: auto;
+  opacity: 1;
+  cursor: pointer;
+}
+.currency-dropdown {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.currency-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flag {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.currency-code {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.balance {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.amount {
+  color: #3b82f6;
+  font-weight: 600;
+}
+.radio-group {
+  display: flex;
+  gap: 24px;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

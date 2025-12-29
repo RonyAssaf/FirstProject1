@@ -1,65 +1,96 @@
 <div class="send-wallet-transfer">
   <h2 class="title">Send from Wallet</h2>
 
-  <form class="form">
-    <!-- Currency -->
+  <form class="form" [formGroup]="form">
+    <!-- ================= Currency ================= -->
     <div class="field">
       <label>Currency</label>
-      <select>
-        <option>Select Currency</option>
+      <select formControlName="currency">
+        <option value="" disabled>Select Currency</option>
+        <option value="USD">USD</option>
+        <option value="LBP">LBP</option>
+        <option value="EUR">EUR</option>
       </select>
     </div>
 
-    <!-- Amount -->
+    <!-- ================= Amount ================= -->
     <div class="field">
       <label>Amount</label>
-      <input type="number" placeholder="Enter amount" />
+      <input type="number" placeholder="Enter amount" formControlName="amount" />
     </div>
 
-    <!-- Recipient Type -->
+    <!-- ================= Recipient Type ================= -->
     <div class="field">
       <label>Recipient Type</label>
 
       <div class="radio-group">
-        <label class="radio">
-          <input type="radio" checked />
+        <label class="radio-item">
+          <input type="radio" value="individual" formControlName="recipientType" />
           <span>Individual</span>
         </label>
 
-        <label class="radio">
-          <input type="radio" />
+        <label class="radio-item">
+          <input type="radio" value="business" formControlName="recipientType" />
           <span>Business</span>
         </label>
       </div>
     </div>
 
-    <!-- Mobile -->
+    <!-- ================= INDIVIDUAL ================= -->
+    @if (form.controls.recipientType.value === 'individual') {
     <div class="field">
       <label>Beneficiary Mobile Number</label>
-      <input type="text" placeholder="+961" />
+      <div class="phone-wrapper">
+        <intl-tel-input
+          class="tel"
+          (numberChange)="handleNumberChange($event)"
+          (validityChange)="handleValidityChange($event)"
+          [initOptions]="{
+            initialCountry: 'lb',
+            formatAsYouType: true,
+            autoPlaceholder: 'aggressive',
+            strictMode: true
+          }"
+        ></intl-tel-input>
+      </div>
     </div>
 
-    <!-- Name -->
     <div class="field">
       <label>Beneficiary Name</label>
-      <input type="text" />
+      <input type="text" formControlName="beneficiaryName" />
+    </div>
+    }
+
+    <!-- ================= BUSINESS ================= -->
+    @if (form.controls.recipientType.value === 'business') {
+    <div class="field">
+      <label>Email</label>
+      <input type="email" placeholder="example@company.com" formControlName="email" />
     </div>
 
-    <!-- Reason -->
+    <div class="field">
+      <label>Company Name</label>
+      <input type="text" formControlName="companyName" />
+    </div>
+    }
+
+    <!-- ================= Reason ================= -->
     <div class="field">
       <label>Transfer Reason</label>
-      <input type="text" />
+      <input type="text" formControlName="reason" />
     </div>
 
-    <!-- Info -->
+    <!-- ================= Info ================= -->
     <div class="info">
       <i class="pi pi-info-circle"></i>
       <span> The receiver has 24 hours to accept or reject the transfer before it expires. </span>
     </div>
 
-    <!-- Action -->
+    <!-- ================= Action ================= -->
     <div class="actions">
-      <button type="button" disabled class="continue-btn">Continue</button>
+      <button type="button" class="continue-btn" [disabled]="!canContinue" (click)="goToSummary()">
+        Continue
+      </button>
     </div>
   </form>
 </div>

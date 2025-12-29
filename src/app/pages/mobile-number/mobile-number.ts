@@ -12,13 +12,7 @@ import 'intl-tel-input/styles';
 @Component({
   selector: 'app-mobile-number',
   standalone: true,
-  imports: [
-    CommonModule,
-    Header,
-    PrimaryButton,
-    ReactiveFormsModule,
-    IntlTelInputComponent,
-  ],
+  imports: [CommonModule, Header, PrimaryButton, ReactiveFormsModule, IntlTelInputComponent],
   templateUrl: './mobile-number.html',
   styleUrls: ['./mobile-number.scss'],
 })
@@ -49,7 +43,6 @@ export class MobileNumber {
       phoneControl.setErrors({ invalidPhone: true });
       return;
     }
-
   }
 
   /* --------------------------------- SUBMIT -------------------------------- */
