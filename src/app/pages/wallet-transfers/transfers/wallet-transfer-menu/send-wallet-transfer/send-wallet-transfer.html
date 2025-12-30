@@ -2,7 +2,6 @@
   <h2 class="title">Send from Wallet</h2>
 
   <form class="form" [formGroup]="form">
-    <!-- ================= Currency ================= -->
     <div class="field">
       <label>Currency</label>
       <select formControlName="currency">
@@ -13,30 +12,37 @@
       </select>
     </div>
 
-    <!-- ================= Amount ================= -->
     <div class="field">
       <label>Amount</label>
       <input type="number" placeholder="Enter amount" formControlName="amount" />
     </div>
 
-    <!-- ================= Recipient Type ================= -->
     <div class="field">
       <label>Recipient Type</label>
 
       <div class="radio-group">
-        <label class="radio-item">
-          <input type="radio" value="individual" formControlName="recipientType" />
-          <span>Individual</span>
-        </label>
+        <div class="radio-item">
+          <p-radioButton
+            inputId="recipientIndividual"
+            name="recipientType"
+            value="individual"
+            formControlName="recipientType"
+          ></p-radioButton>
+          <label for="recipientIndividual">Individual</label>
+        </div>
 
-        <label class="radio-item">
-          <input type="radio" value="business" formControlName="recipientType" />
-          <span>Business</span>
-        </label>
+        <div class="radio-item">
+          <p-radioButton
+            inputId="recipientBusiness"
+            name="recipientType"
+            value="business"
+            formControlName="recipientType"
+          ></p-radioButton>
+          <label for="recipientBusiness">Business</label>
+        </div>
       </div>
     </div>
 
-    <!-- ================= INDIVIDUAL ================= -->
     @if (form.controls.recipientType.value === 'individual') {
     <div class="field">
       <label>Beneficiary Mobile Number</label>
@@ -59,10 +65,7 @@
       <label>Beneficiary Name</label>
       <input type="text" formControlName="beneficiaryName" />
     </div>
-    }
-
-    <!-- ================= BUSINESS ================= -->
-    @if (form.controls.recipientType.value === 'business') {
+    } @if (form.controls.recipientType.value === 'business') {
     <div class="field">
       <label>Email</label>
       <input type="email" placeholder="example@company.com" formControlName="email" />
@@ -74,19 +77,16 @@
     </div>
     }
 
-    <!-- ================= Reason ================= -->
     <div class="field">
       <label>Transfer Reason</label>
       <input type="text" formControlName="reason" />
     </div>
 
-    <!-- ================= Info ================= -->
     <div class="info">
       <i class="pi pi-info-circle"></i>
       <span> The receiver has 24 hours to accept or reject the transfer before it expires. </span>
     </div>
 
-    <!-- ================= Action ================= -->
     <div class="actions">
       <button type="button" class="continue-btn" [disabled]="!canContinue" (click)="goToSummary()">
         Continue

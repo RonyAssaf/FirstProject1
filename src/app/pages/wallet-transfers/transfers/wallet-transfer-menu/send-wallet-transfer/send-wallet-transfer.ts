@@ -15,7 +15,7 @@ import 'intl-tel-input/styles';
 })
 export class SendWalletTransfer {
   form = new FormGroup({
-    currency: new FormControl<string>(''), // must be selected
+    currency: new FormControl<string>(''),
     amount: new FormControl<number | null>(null),
 
     recipientType: new FormControl<'individual' | 'business'>('individual'),
@@ -31,6 +31,7 @@ export class SendWalletTransfer {
 
     reason: new FormControl<string | null>(null),
   });
+  ingredient: any;
 
   constructor(private router: Router) {
     // Clear irrelevant fields when switching recipient type

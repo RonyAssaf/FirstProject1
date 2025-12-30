@@ -43,7 +43,6 @@ export const routes: Routes = [
     component: Transfers,
     data: { breadcrumb: 'Transfers' },
     children: [
-      // Wallet Transfer group (NO component here)
       {
         path: 'wallet-transfer',
         data: { breadcrumb: 'Wallet Transfer' },
@@ -62,7 +61,6 @@ export const routes: Routes = [
         ],
       },
 
-      // Test 1 group (NO component here)
       {
         path: 'test-1',
         data: { breadcrumb: 'test1' },
@@ -72,7 +70,6 @@ export const routes: Routes = [
         ],
       },
 
-      // Test 2 group (NO component here)
       {
         path: 'test-2',
         data: { breadcrumb: 'test2' },
@@ -82,7 +79,6 @@ export const routes: Routes = [
         ],
       },
 
-      // default transfers page
       { path: '', pathMatch: 'full', redirectTo: 'wallet-transfer' },
     ],
   },

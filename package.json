@@ -29,6 +29,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@primeuix/themes": "^2.0.2",
     "@types/intl-tel-input": "^18.1.4",
     "date-fns": "^4.1.0",
     "google-libphonenumber": "^3.2.43",
