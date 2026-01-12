@@ -3,7 +3,6 @@
   color: #000 !important;
 }
 
-/* ✅ Start & end of the range stay blue */
 .p-datepicker .p-datepicker-day.p-highlight {
   background: #2b5cff !important; /* your blue */
   color: #ffffff !important;
@@ -14,4 +13,10 @@
 }
 body {
   margin: 0px !important;
+}
+:root {
+  --iti-path-flags-1x: url('/assets/intl-tel-input/flags.webp');
+  --iti-path-flags-2x: url('/assets/intl-tel-input/flags@2x.webp');
+  --iti-path-globe-1x: url('/assets/intl-tel-input/globe.webp');
+  --iti-path-globe-2x: url('/assets/intl-tel-input/globe@2x.webp');
 }

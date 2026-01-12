@@ -14,27 +14,24 @@ import 'intl-tel-input/styles';
   styleUrl: './send-wallet-transfer.scss',
 })
 export class SendWalletTransfer {
+  private selectedPhone: string | null = null;
   form = new FormGroup({
     currency: new FormControl<string>(''),
     amount: new FormControl<number | null>(null),
 
     recipientType: new FormControl<'individual' | 'business'>('individual'),
 
-    // Individual
     phone: new FormControl<string | null>(null),
     phoneValid: new FormControl<boolean>(false),
     beneficiaryName: new FormControl<string | null>(null),
 
-    // Business
     email: new FormControl<string | null>(null),
     companyName: new FormControl<string | null>(null),
 
     reason: new FormControl<string | null>(null),
   });
-  ingredient: any;
 
   constructor(private router: Router) {
-    // Clear irrelevant fields when switching recipient type
     this.form.controls.recipientType.valueChanges.subscribe((type) => {
       if (type === 'individual') {
         this.form.patchValue({
@@ -52,15 +49,28 @@ export class SendWalletTransfer {
     });
   }
 
-  /** intl-tel-input handlers */
   handleNumberChange(event: any) {
-    this.form.controls.phone.setValue(event?.number ?? null);
-    this.form.updateValueAndValidity();
+    const phoneNumber =
+      (typeof event === 'string' ? event : null) ??
+      event?.number ??
+      event?.phoneNumber ??
+      event?.internationalNumber ??
+      event?.e164Number ??
+      event?.detail?.number ??
+      null;
+
+    this.selectedPhone = phoneNumber;
+
+    if (this.form.controls.phoneValid.value) {
+      this.form.controls.phone.setValue(phoneNumber);
+    }
+
+    console.log('PHONE PARSED:', this.selectedPhone, 'RAW EVENT:', event);
   }
 
   handleValidityChange(isValid: boolean) {
     this.form.controls.phoneValid.setValue(isValid);
-    this.form.updateValueAndValidity(); // 🔑 REQUIRED
+    this.form.updateValueAndValidity();
   }
 
   /** FINAL VALIDATION */
@@ -81,9 +91,33 @@ export class SendWalletTransfer {
 
     return false;
   }
+
+  // =========================
+  // GO TO SUMMARY (NO SAVE)
+  // =========================
   goToSummary() {
+    const v = this.form.getRawValue();
+    console.log('FORM RAW VALUE:', this.form.getRawValue());
+    const transferDraft = {
+      currency: v.currency!,
+      amount: v.amount!,
+
+      recipientType: v.recipientType === 'individual' ? 'INDIVIDUAL' : 'BUSINESS',
+
+      // 🔥 USE THE STORED PHONE, NOT THE FORM
+      recipientPhone: v.recipientType === 'individual' ? this.selectedPhone : null,
+
+      recipientEmail: v.recipientType === 'business' ? v.email : null,
+
+      beneficiaryName: v.beneficiaryName ?? null,
+      companyName: v.companyName ?? null,
+      transferReason: v.reason ?? null,
+    };
+
+    console.log('TRANSFER DRAFT SENT TO SUMMARY:', transferDraft);
+
     this.router.navigate(['/transfers/wallet-transfer/summary'], {
-      state: { data: this.form.value },
+      state: { transfer: transferDraft },
     });
   }
 }

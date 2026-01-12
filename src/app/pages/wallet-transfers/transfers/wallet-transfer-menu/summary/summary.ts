@@ -5,12 +5,16 @@ import { CommonModule } from '@angular/common';
 type TransferSummary = {
   currency: string;
   amount: number;
+
+  // 👇 HTML EXPECTS LOWERCASE
   recipientType: 'individual' | 'business';
+
+  // 👇 HTML EXPECTS THESE NAMES
   beneficiaryName?: string;
   phone?: string;
   email?: string;
   companyName?: string;
-  reason: string;
+  reason?: string;
 };
 
 @Component({
@@ -23,18 +27,32 @@ type TransferSummary = {
 export class Summary {
   data!: TransferSummary;
 
+  // 👇 HTML USES `fees`
   fees = 0;
 
   constructor(private router: Router) {
-    const state = history.state?.data;
+    const state = history.state?.transfer;
 
     if (!state) {
-      // Safety: user refreshed page
       this.router.navigate(['/transfers/wallet-transfer/sendWalletTransfer']);
       return;
     }
 
-    this.data = state;
+    // =========================
+    // NORMALIZE DATA FOR UI
+    // =========================
+    this.data = {
+      currency: state.currency,
+      amount: state.amount,
+
+      recipientType: state.recipientType === 'INDIVIDUAL' ? 'individual' : 'business',
+
+      beneficiaryName: state.beneficiaryName,
+      phone: state.recipientPhone,
+      email: state.recipientEmail,
+      companyName: state.companyName,
+      reason: state.transferReason,
+    };
   }
 
   get totalAmount(): number {
@@ -46,6 +64,11 @@ export class Summary {
   }
 
   confirm() {
-    this.router.navigate(['/passcode']);
+    console.log(this.data);
+    this.router.navigate(['/passcode'], {
+      state: {
+        transfer: this.data,
+      },
+    });
   }
 }

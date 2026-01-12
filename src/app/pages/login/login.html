@@ -1,0 +1,29 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="email">Email registered</label>
+  <input id="email" type="email" formControlName="email" autocomplete="email" />
+
+  <div *ngIf="email.touched && email.invalid" style="color: red; margin-top: 6px">
+    <div *ngIf="email.errors?.['required']">Email is required</div>
+    <div *ngIf="email.errors?.['email']">Enter a valid email</div>
+  </div>
+
+  <div style="height: 16px"></div>
+
+  <label for="password">Password</label>
+  <input id="password" type="password" formControlName="password" autocomplete="current-password" />
+
+  <div *ngIf="password.touched && password.invalid" style="color: red; margin-top: 6px">
+    <div *ngIf="password.errors?.['required']">Password is required</div>
+    <div *ngIf="password.errors?.['minlength']">Password must be at least 8 characters</div>
+  </div>
+
+  <div *ngIf="errorMsg()" style="color: red; margin-top: 12px">
+    {{ errorMsg() }}
+  </div>
+
+  <div style="height: 16px"></div>
+
+  <button type="submit" [disabled]="form.invalid || isLoading()">
+    {{ isLoading() ? 'Logging in...' : 'Login' }}
+  </button>
+</form>

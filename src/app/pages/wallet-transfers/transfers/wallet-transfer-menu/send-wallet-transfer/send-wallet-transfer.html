@@ -2,6 +2,7 @@
   <h2 class="title">Send from Wallet</h2>
 
   <form class="form" [formGroup]="form">
+    <!-- ================= Currency ================= -->
     <div class="field">
       <label>Currency</label>
       <select formControlName="currency">
@@ -12,6 +13,7 @@
       </select>
     </div>
 
+    <!-- ================= Amount ================= -->
     <div class="field">
       <label>Amount</label>
       <input type="number" placeholder="Enter amount" formControlName="amount" />

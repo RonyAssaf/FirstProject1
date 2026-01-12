@@ -21,11 +21,11 @@ export class TransactionsRow {
     const normalized = currency?.trim().toUpperCase();
     switch (normalized) {
       case 'USD':
-        return '/UsFlag.png';
+        return 'assets/UsFlag.png';
       case 'EUR':
-        return '/EuroFlag.png';
+        return 'assets/EuroFlag.png';
       case 'LBP':
-        return '/LbFlag.png';
+        return 'assets/LbFlag.png';
       default:
         return '';
     }

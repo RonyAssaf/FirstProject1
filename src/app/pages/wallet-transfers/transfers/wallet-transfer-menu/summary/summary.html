@@ -5,11 +5,13 @@
   </div>
 
   <div class="summary-table">
+    <!-- FROM -->
     <div class="row">
       <span class="label">From</span>
       <span class="value">Wallet {{ data.currency }} Balance</span>
     </div>
 
+    <!-- BENEFICIARY NAME OR EMAIL -->
     <div class="row">
       <span class="label">
         {{ data.recipientType === 'individual' ? 'Beneficiary Name' : 'Email' }}
@@ -18,27 +20,45 @@
         {{ data.recipientType === 'individual' ? data.beneficiaryName : data.email }}
       </span>
     </div>
+
+    <!-- PHONE (INDIVIDUAL ONLY) -->
+    <div class="row" *ngIf="data.recipientType === 'individual'">
+      <span class="label">Phone Number</span>
+      <span class="value">{{ data.phone }}</span>
+    </div>
+
+    <!-- COMPANY NAME (BUSINESS ONLY) -->
+    <div class="row" *ngIf="data.recipientType === 'business'">
+      <span class="label">Company Name</span>
+      <span class="value">{{ data.companyName }}</span>
+    </div>
+
+    <!-- AMOUNT -->
     <div class="row">
       <span class="label">Amount</span>
       <span class="value"> {{ data.currency }} {{ data.amount | number : '1.2-2' }} </span>
     </div>
 
+    <!-- FEES -->
     <div class="row">
       <span class="label">Fees</span>
       <span class="value fee"> {{ data.currency }} {{ fees | number : '1.2-2' }} </span>
     </div>
 
+    <!-- TOTAL -->
     <div class="row total">
       <span class="label">Total Amount</span>
       <span class="value"> {{ data.currency }} {{ totalAmount | number : '1.2-2' }} </span>
     </div>
 
+    <!-- REASON -->
     <div class="row">
       <span class="label">Transfer Reason</span>
       <span class="value">{{ data.reason }}</span>
     </div>
   </div>
 
+  <!-- ACTIONS -->
   <div class="summary-actions">
     <button class="cancel-btn" (click)="goBack()">Cancel</button>
     <button class="confirm-btn" (click)="confirm()">Continue</button>
