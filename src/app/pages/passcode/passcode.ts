@@ -46,21 +46,20 @@ export class Passcode {
 
     console.log('TRANSFER OBJECT:', this.transfer);
 
-    // ✅ STRICT TYPE FOR BACKEND
-    const recipientType: RecipientType =
-      this.transfer.recipientType === 'individual' ? 'INDIVIDUAL' : 'BUSINESS';
+    // ✅ transfer.recipientType already should be 'INDIVIDUAL' | 'BUSINESS'
+    const recipientType = this.transfer.recipientType as RecipientType;
 
     const payload = {
       fromUserId: user.id,
       recipientType,
 
-      recipientPhone: recipientType === 'INDIVIDUAL' ? this.transfer.phone : undefined,
-
-      recipientEmail: recipientType === 'BUSINESS' ? this.transfer.email : undefined,
+      // ✅ MATCH BACKEND DTO FIELD NAMES
+      recipientPhone: recipientType === 'INDIVIDUAL' ? this.transfer.recipientPhone : undefined,
+      recipientEmail: recipientType === 'BUSINESS' ? this.transfer.recipientEmail : undefined,
 
       beneficiaryName: this.transfer.beneficiaryName ?? undefined,
       companyName: this.transfer.companyName ?? undefined,
-      transferReason: this.transfer.reason ?? undefined,
+      transferReason: this.transfer.transferReason ?? undefined,
 
       currency: this.transfer.currency,
       amount: this.transfer.amount,

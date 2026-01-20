@@ -12,7 +12,7 @@ export class TransactionsService {
   // =========================
   // GET user transactions
   // =========================
-  getTransactions(userId: number): Observable<Tx[]> {
+  getTransactions(userId: string): Observable<Tx[]> {
     return this.http.get<any[]>(`${this.apiUrl}?userId=${userId}`).pipe(
       map((rows) =>
         rows.map((tx) => ({
@@ -44,7 +44,7 @@ export class TransactionsService {
   // CALLED ONLY AFTER OTP
   // =========================
   walletTransfer(payload: {
-    fromUserId: number;
+    fromUserId: string;
 
     recipientType: 'INDIVIDUAL' | 'BUSINESS';
     recipientPhone?: string;
@@ -58,5 +58,49 @@ export class TransactionsService {
     amount: number;
   }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/wallet-transfer`, payload);
+  }
+  // GET pending transfers for user
+  getPendingTransfers(userId: string): Observable<Tx[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/pending?userId=${userId}`).pipe(
+      map((rows) =>
+        rows.map((tx) => ({
+          ...tx,
+          from: tx.fromAccount,
+          to: tx.toAccount,
+        }))
+      )
+    );
+  }
+
+  acceptTransfer(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/accept`, {});
+  }
+
+  declineTransfer(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/decline`, {});
+  }
+  getPendingOutgoing(userId: number) {
+    return this.http.get<any[]>(`${this.apiUrl}/pending-outgoing?userId=${userId}`).pipe(
+      map((rows) =>
+        rows.map((tx) => ({
+          ...tx,
+          from: tx.fromAccount,
+          to: tx.toAccount,
+        }))
+      )
+    );
+  }
+
+  cancelTransfer(id: number) {
+    return this.http.post(`${this.apiUrl}/${id}/cancel`, {});
+  }
+  getTransactionById(id: string): Observable<Tx> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map((tx) => ({
+        ...tx,
+        from: tx.fromAccount,
+        to: tx.toAccount,
+      }))
+    );
   }
 }

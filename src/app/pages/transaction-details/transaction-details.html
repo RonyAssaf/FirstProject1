@@ -9,19 +9,32 @@
 
     <!-- PAGE CONTENT -->
     <div class="details-card">
-      <h2 class="details-title">
+      <h2 class="details-title" (click)="backToTransactions()" style="cursor: pointer">
         <i class="pi pi-angle-left"></i>
         Transaction Details
       </h2>
 
-      <div class="details-row" *ngFor="let d of details">
-        <div class="label">
-          <i [class]="d.icon"></i>
-          <span>{{ d.label }}</span>
-        </div>
-
-        <span class="value" [class.fee-value]="d.isFee">{{ d.value }}</span>
+      <!-- LOADING -->
+      <div *ngIf="loading" class="details-row">
+        <span class="value">Loading...</span>
       </div>
+
+      <!-- ERROR -->
+      <div *ngIf="!loading && errorMsg" class="details-row">
+        <span class="value fee-value">{{ errorMsg }}</span>
+      </div>
+
+      <!-- DETAILS -->
+      <ng-container *ngIf="!loading && !errorMsg">
+        <div class="details-row" *ngFor="let d of details">
+          <div class="label">
+            <i [class]="d.icon"></i>
+            <span>{{ d.label }}</span>
+          </div>
+
+          <span class="value" [class.fee-value]="d.isFee">{{ d.value }}</span>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -3,10 +3,10 @@ export interface CurrentUser {
   email: string;
   password?: string;
   phoneNumber?: string;
-  id?: number;
+  id?: string;
 }
 export interface AuthUser {
-  id: number;
+  id: string;
   email: string;
   phoneNumber?: string;
 }

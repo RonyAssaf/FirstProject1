@@ -117,3 +117,31 @@
 .sidebar-nav a.active i {
   color: #2563eb;
 }
+
+.support-btn {
+  position: fixed;
+  bottom: 44px;
+  right: 24px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #2b5cff;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 10000;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.support-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+.support-btn:active {
+  transform: scale(0.95);
+}

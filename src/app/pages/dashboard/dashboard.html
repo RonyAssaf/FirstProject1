@@ -1,0 +1,87 @@
+<div class="dashboard-layout">
+  <app-sidebar class="sidebar"></app-sidebar>
+
+  <div class="dashboard-content">
+    <app-header-transactions></app-header-transactions>
+
+    <div class="container pending-card">
+      <div class="card-header">
+        <h2 class="card-title">Pending Transfers</h2>
+      </div>
+
+      <!-- Loading -->
+      @if (loading) {
+      <div class="empty-state">
+        <p class="empty-text">Loading...</p>
+      </div>
+      }
+
+      <!-- Empty State -->
+      @if (!loading && pending.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-send empty-icon"></i>
+        <p class="empty-text">No Pending Transfer Yet</p>
+        <button class="go-btn" type="button" (click)="goToWalletTransfers()">Go To Transfer</button>
+      </div>
+      }
+
+      <!-- Pending List -->
+      @if (!loading && pending.length > 0) {
+      <div class="pending-list">
+        @for (tx of pending; track tx.id) {
+        <div class="pending-row">
+          <div class="pending-left">
+            <div class="pending-line">
+              <span class="sender">
+                {{ tx.amount > 0 ? tx.from : 'You' }}
+              </span>
+              <span class="text">
+                {{ tx.amount > 0 ? 'sent you' : 'sent' }}
+              </span>
+              <span class="receiver" *ngIf="tx.amount < 0">{{ tx.to }}</span>
+
+              <span class="amount">{{ tx.currency }} {{ tx.amount | number : '1.2-2' }}</span>
+            </div>
+
+            <div class="pending-meta">
+              <span>{{ tx.date | date : 'dd MMM yyyy, HH:mm' }}</span>
+              <span class="dot">•</span>
+            </div>
+          </div>
+
+          <div class="pending-actions">
+            @if (tx.amount > 0) {
+            <!-- Incoming (receiver) -->
+            <button class="btn decline" type="button" (click)="ask('decline', tx)">Decline</button>
+            <button class="btn accept" type="button" (click)="ask('accept', tx)">Accept</button>
+            } @else {
+            <!-- Outgoing (sender) -->
+            <button class="btn cancel" type="button" (click)="ask('cancel', tx)">Cancel</button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      }
+    </div>
+
+    <!-- Confirm Popup -->
+    @if (confirmOpen) {
+    <div class="confirm-backdrop" (click)="cancelConfirm()"></div>
+    <div class="confirm-modal">
+      <h3>Are you sure?</h3>
+      <p>
+        You are about to
+        <strong>{{ confirmAction }}</strong>
+        this transfer.
+      </p>
+
+      <div class="confirm-actions">
+        <button type="button" class="no" (click)="cancelConfirm()">No</button>
+        <button type="button" class="yes" (click)="confirmYes()">Yes</button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

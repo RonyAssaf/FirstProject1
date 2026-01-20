@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import 'primeicons/primeicons.css';
-import { Header } from '../../core/header/header';
+import { Header } from '../../shared/header/header';
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
 
 @Component({

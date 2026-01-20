@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Header } from '../../core/header/header';
+import { Header } from '../../shared/header/header';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
 import { IntlTelInputComponent } from 'intl-tel-input/angularWithUtils';
 import 'intl-tel-input/styles';

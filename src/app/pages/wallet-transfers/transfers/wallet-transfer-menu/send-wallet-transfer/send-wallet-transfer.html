@@ -64,8 +64,10 @@
     </div>
 
     <div class="field">
-      <label>Beneficiary Name</label>
+      <label> Beneficiary Name @if (phoneLookupError) { } </label>
+
       <input type="text" formControlName="beneficiaryName" />
+      <span class="field-error">{{ phoneLookupError }}</span>
     </div>
     } @if (form.controls.recipientType.value === 'business') {
     <div class="field">
@@ -74,7 +76,11 @@
     </div>
 
     <div class="field">
-      <label>Company Name</label>
+      <label>
+        Company Name @if (emailLookupError) {
+        <span class="field-error">{{ emailLookupError }}</span>
+        }
+      </label>
       <input type="text" formControlName="companyName" />
     </div>
     }

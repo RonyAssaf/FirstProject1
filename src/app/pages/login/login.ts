@@ -59,22 +59,22 @@ export class Login {
     this.isLoading.set(true);
 
     this.userService.login(payload).subscribe({
-      next: (user: AuthUser) => {
-        // ✅ SAVE FOR AUTH GUARD
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+
         localStorage.setItem(
           'auth_user',
           JSON.stringify({
-            id: user.id,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
+            id: res.user.id,
+            email: res.user.email,
+            phoneNumber: res.user.phoneNumber,
           })
         );
 
-        // ✅ KEEP CURRENT USER AVAILABLE IN APP
         this.currentUser.setUser({
-          id: user.id,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
+          id: res.user.id,
+          email: res.user.email,
+          phoneNumber: res.user.phoneNumber,
         });
 
         this.router.navigate(['/transactions']);

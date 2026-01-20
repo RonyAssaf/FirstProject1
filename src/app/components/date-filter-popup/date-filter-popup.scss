@@ -25,7 +25,7 @@
 .date-popup {
   background: #fff;
   width: 1200px;
-  height: 500px;
+  height: 550px;
   padding-left: 60px;
   padding-right: 60px;
   padding-top: 15px;
@@ -38,7 +38,7 @@
 :host ::ng-deep .p-datepicker-next-button {
   position: absolute;
   top: 175px;
-  right: -50px;
+  right: -70px;
   background-color: rgb(236, 235, 235);
 
   width: 40px;
@@ -181,10 +181,7 @@
 }
 
 :host ::ng-deep .p-datepicker table td span {
-  height: 40px;
-  width: 40px;
-  margin: 1px;
-  padding: 3px;
+  padding: 2px;
   border-radius: 10%;
 }
 .quick-options p {

@@ -18,6 +18,7 @@ import { Test22 } from './pages/wallet-transfers/transfers/test-2/test-22/test-2
 
 import { Passcode } from './pages/passcode/passcode';
 import { Successful } from './pages/successful/successful';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
   // =========================
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'create-password', component: CreatePasswordComponent },
   { path: 'mobile-number', component: MobileNumber },
+  { path: 'dashboard', component: Dashboard, data: { breadcrumb: 'Dashboard' } },
 
   // =========================
   // PROTECTED ROUTES

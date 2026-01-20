@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { OtpInputComponent } from '../../components/otp-input/otp-input';
 import { ToastComponent } from '../../components/toast/toast';
 import { ToastService } from '../../components/toast/toast.service';
-import { Header } from '../../core/header/header';
+import { Header } from '../../shared/header/header';
 import { Router } from '@angular/router';
 
 @Component({

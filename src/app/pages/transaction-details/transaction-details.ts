@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { HeaderTransactions } from '../../shared/header-transactions/header-transactions';
 import { Tx } from '../../components/transactions-row/transaction.interface';
+
+import { TransactionsService } from '../transactions/transactions.service';
 
 type DetailRow = {
   label: string;
@@ -20,59 +22,114 @@ type DetailRow = {
   templateUrl: './transaction-details.html',
   styleUrl: './transaction-details.scss',
 })
-export class TransactionDetails {
-  tx!: Tx;
+export class TransactionDetails implements OnInit {
+  tx: Tx | null = null;
+
+  loading = true;
+  errorMsg: string | null = null;
 
   details: DetailRow[] = [];
 
-  constructor() {
-    const state = history.state;
-    this.tx = state?.tx;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private txService: TransactionsService
+  ) {}
 
-    if (this.tx) {
-      this.details = [
-        {
-          label: 'From',
-          value: this.tx.from,
-          icon: 'pi pi-user',
-        },
-        {
-          label: 'To',
-          value: this.tx.to,
-          icon: 'pi pi-building',
-        },
-        {
-          label: 'Total Amount',
-          value: `USD ${this.tx.total.toFixed(2)}`,
-          icon: 'pi pi-wallet',
-        },
-        {
-          label: 'Amount',
-          value: `USD ${this.tx.amount.toFixed(2)}`,
-          icon: 'pi pi-credit-card',
-        },
-        {
-          label: 'Fee',
-          value: `USD ${this.tx.fee.toFixed(2)}`,
-          icon: 'pi pi-percentage',
-          isFee: true,
-        },
-        {
-          label: 'Date',
-          value: new Date(this.tx.date).toLocaleString(),
-          icon: 'pi pi-calendar',
-        },
-        {
-          label: 'Status',
-          value: this.tx.status,
-          icon: 'pi pi-check-circle',
-        },
-        {
-          label: 'Additional Details',
-          value: this.tx.type,
-          icon: 'pi pi-info-circle',
-        },
-      ];
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (!id) {
+      this.loading = false;
+      this.errorMsg = 'Missing transaction id in route.';
+      return;
     }
+
+    // Optional: show instantly if we navigated with state (nice UX),
+    // but still re-fetch from backend to keep it always correct.
+    const stateTx = (history.state as any)?.tx as Tx | undefined;
+    if (stateTx) {
+      this.tx = stateTx;
+      this.details = this.buildDetails(stateTx);
+    }
+
+    // ✅ Always fetch from backend by id
+    this.loading = true;
+    this.errorMsg = null;
+
+    this.txService.getTransactionById(id).subscribe({
+      next: (tx) => {
+        this.tx = tx;
+        this.details = this.buildDetails(tx);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load transaction:', err);
+        this.loading = false;
+
+        // If API returns { message: "..."} from your GlobalExceptionHandler
+        const apiMsg = err?.error?.message || err?.error?.detail;
+        this.errorMsg = apiMsg || 'Could not load transaction details.';
+      },
+    });
+  }
+
+  backToTransactions() {
+    // keep your tableState restore logic (already stored in history.state)
+    this.router.navigate(['/transactions'], {
+      state: {
+        ...history.state,
+        fromDetails: true,
+      },
+    });
+  }
+
+  private buildDetails(tx: Tx): DetailRow[] {
+    console.log('Fetching tx from backend by id:', tx.id);
+    const currency = tx.currency || 'USD';
+
+    return [
+      {
+        label: 'From',
+        value: tx.from,
+        icon: 'pi pi-user',
+      },
+      {
+        label: 'To',
+        value: tx.to,
+        icon: 'pi pi-building',
+      },
+      {
+        label: 'Total Amount',
+        value: `${currency} ${Number(tx.total).toFixed(2)}`,
+        icon: 'pi pi-wallet',
+      },
+      {
+        label: 'Amount',
+        value: `${currency} ${Number(tx.amount).toFixed(2)}`,
+        icon: 'pi pi-credit-card',
+      },
+      {
+        label: 'Fee',
+        value: `${currency} ${Number(tx.fee).toFixed(2)}`,
+        icon: 'pi pi-percentage',
+        isFee: true,
+      },
+      {
+        label: 'Date',
+        value: new Date(tx.date).toLocaleString(),
+        icon: 'pi pi-calendar',
+      },
+      {
+        label: 'Status',
+        value: tx.status,
+        icon: 'pi pi-check-circle',
+      },
+      {
+        label: 'Additional Details',
+        value: tx.type,
+        icon: 'pi pi-info-circle',
+      },
+    ];
   }
 }

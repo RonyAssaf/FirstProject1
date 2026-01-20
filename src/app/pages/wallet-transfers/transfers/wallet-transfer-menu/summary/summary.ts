@@ -6,15 +6,26 @@ type TransferSummary = {
   currency: string;
   amount: number;
 
-  // 👇 HTML EXPECTS LOWERCASE
+  // UI only
   recipientType: 'individual' | 'business';
 
-  // 👇 HTML EXPECTS THESE NAMES
   beneficiaryName?: string;
   phone?: string;
   email?: string;
   companyName?: string;
   reason?: string;
+};
+
+// ✅ This is the backend-shaped object we must send to Passcode
+type BackendTransferDraft = {
+  currency: string;
+  amount: number;
+  recipientType: 'INDIVIDUAL' | 'BUSINESS';
+  recipientPhone: string | null;
+  recipientEmail: string | null;
+  beneficiaryName: string | null;
+  companyName: string | null;
+  transferReason: string | null;
 };
 
 @Component({
@@ -30,6 +41,9 @@ export class Summary {
   // 👇 HTML USES `fees`
   fees = 0;
 
+  // ✅ Keep original transfer for backend submit
+  private backendTransfer!: BackendTransferDraft;
+
   constructor(private router: Router) {
     const state = history.state?.transfer;
 
@@ -37,6 +51,9 @@ export class Summary {
       this.router.navigate(['/transfers/wallet-transfer/sendWalletTransfer']);
       return;
     }
+
+    // ✅ state here is already the backend-shaped object coming from SendWalletTransfer
+    this.backendTransfer = state as BackendTransferDraft;
 
     // =========================
     // NORMALIZE DATA FOR UI
@@ -64,10 +81,10 @@ export class Summary {
   }
 
   confirm() {
-    console.log(this.data);
+    // ✅ Send backend-shaped transfer to passcode
     this.router.navigate(['/passcode'], {
       state: {
-        transfer: this.data,
+        transfer: this.backendTransfer,
       },
     });
   }
