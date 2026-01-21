@@ -3,13 +3,14 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { Header } from '../../shared/header/header';
+import { Header } from '../../core/header/header';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
 import { IntlTelInputComponent } from 'intl-tel-input/angularWithUtils';
 import 'intl-tel-input/styles';
 
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
-import { AuthUser, UserService } from 'src/app/core/servics/user.services';
+import { UserService } from 'src/app/core/servics/user.services';
+import { AuthService } from 'src/app/core/guards/AuthService';
 
 @Component({
   selector: 'app-mobile-number',
@@ -29,23 +30,25 @@ export class MobileNumber {
   constructor(
     private router: Router,
     private currentUser: CurrentUserService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService,
   ) {}
 
   /** emitted by intl-tel-input */
-  handleNumberChange(event: any): void {
+  handleNumberChange(event: unknown): void {
+    const e = event as any;
+
     // event might be a string OR an object depending on the wrapper
     const value =
-      (typeof event === 'string' ? event : null) ??
-      event?.number ??
-      event?.phoneNumber ??
-      event?.internationalNumber ??
-      event?.e164Number ??
-      event?.detail?.number ??
+      (typeof e === 'string' ? e : null) ??
+      e?.number ??
+      e?.phoneNumber ??
+      e?.internationalNumber ??
+      e?.e164Number ??
+      e?.detail?.number ??
       null;
 
     this.phoneNumber = value;
-    console.log('PHONE PARSED:', this.phoneNumber, 'RAW EVENT:', event);
   }
 
   handleValidityChange(isValid: boolean): void {
@@ -55,45 +58,45 @@ export class MobileNumber {
   submit(): void {
     const user = this.currentUser.getUser();
 
-    console.log('DEBUG PHONE:', this.phoneNumber);
-    console.log('DEBUG CURRENT USER:', user);
-
-    // 🔒 Safety check — registration must be complete
     if (!user?.email || !user?.password || !this.phoneNumber) {
       console.error('Missing registration data');
       return;
     }
 
-    // ✅ Final payload — ONE DB INSERT
-    const payload = {
-      email: user.email,
-      password: user.password,
+    const email = user.email; // ✅ now strictly string
+    const password = user.password; // ✅ now strictly string
+
+    const registerPayload = {
+      email,
+      password,
       phoneNumber: this.phoneNumber,
     };
 
-    this.userService.register(payload).subscribe({
-      next: (createdUser: AuthUser) => {
-        // ✅ OVERWRITE current user with AUTHENTICATED user
+    this.userService.register(registerPayload).subscribe({
+      next: (createdUser) => {
         this.currentUser.setUser({
           id: createdUser.id,
           email: createdUser.email,
           phoneNumber: createdUser.phoneNumber,
         });
 
-        // ✅ Persist for refresh / guards
-        localStorage.setItem(
-          'current_user',
-          JSON.stringify({
-            id: createdUser.id,
-            email: createdUser.email,
-            phoneNumber: createdUser.phoneNumber,
-          })
-        );
-
-        // 🚀 Go to protected area
-        this.router.navigate(['/transactions']);
+        this.userService.login({ email, password }).subscribe({
+          next: (res) => {
+            this.authService.setToken(res.token);
+            this.currentUser.setUser({
+              id: res.user.id,
+              email: res.user.email,
+              phoneNumber: res.user.phoneNumber,
+            });
+            this.router.navigate(['/transactions']);
+          },
+          error: (err) => {
+            console.error('Auto-login failed after register', err);
+            this.router.navigate(['/login']);
+          },
+        });
       },
-      error: (err: unknown) => {
+      error: (err) => {
         console.error('Registration failed', err);
       },
     });

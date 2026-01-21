@@ -1,6 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { UserService } from './core/servics/user.services';
 import { CommonModule } from '@angular/common';
 
 @Component({

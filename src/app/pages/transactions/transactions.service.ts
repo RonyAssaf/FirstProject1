@@ -9,25 +9,58 @@ export class TransactionsService {
 
   constructor(private http: HttpClient) {}
 
-  // =========================
-  // GET user transactions
-  // =========================
-  getTransactions(userId: string): Observable<Tx[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?userId=${userId}`).pipe(
-      map((rows) =>
-        rows.map((tx) => ({
-          ...tx,
-          from: tx.fromAccount,
-          to: tx.toAccount,
-        }))
-      )
-    );
+  /* =========================
+   * MAPPERS
+   * ========================= */
+
+  /** Normalize backend transaction to frontend Tx */
+  private mapTx(tx: any): Tx {
+    return {
+      ...tx,
+      from: tx.fromAccount,
+      to: tx.toAccount,
+    };
   }
 
-  // =========================
-  // LEGACY CREATE transaction
-  // (KEEP — used elsewhere)
-  // =========================
+  private mapTxList(rows: any[]): Tx[] {
+    return rows.map((tx) => this.mapTx(tx));
+  }
+
+  /* =========================
+   * GET USER TRANSACTIONS
+   * ========================= */
+
+  getTransactions(userId: string): Observable<Tx[]> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}?userId=${userId}`)
+      .pipe(map((rows) => this.mapTxList(rows)));
+  }
+
+  getTransactionById(id: string): Observable<Tx> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(map((tx) => this.mapTx(tx)));
+  }
+
+  /* =========================
+   * PENDING TRANSFERS
+   * ========================= */
+
+  getPendingTransfers(userId: string): Observable<Tx[]> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}/pending?userId=${userId}`)
+      .pipe(map((rows) => this.mapTxList(rows)));
+  }
+
+  getPendingOutgoing(userId: number): Observable<Tx[]> {
+    return this.http
+      .get<any[]>(`${this.apiUrl}/pending-outgoing?userId=${userId}`)
+      .pipe(map((rows) => this.mapTxList(rows)));
+  }
+
+  /* =========================
+   * CREATE / TRANSFER
+   * ========================= */
+
+  // LEGACY CREATE transaction (KEEP — used elsewhere)
   createTransaction(payload: {
     userId: number;
     fromAccount: string;
@@ -35,72 +68,38 @@ export class TransactionsService {
     currency: string;
     amount: number;
     total: number;
-  }): Observable<any> {
-    return this.http.post<any>(this.apiUrl, payload);
+  }): Observable<unknown> {
+    return this.http.post<unknown>(this.apiUrl, payload);
   }
 
-  // =========================
-  // NEW WALLET TRANSFER
-  // CALLED ONLY AFTER OTP
-  // =========================
+  // NEW WALLET TRANSFER (after OTP)
   walletTransfer(payload: {
     fromUserId: string;
-
     recipientType: 'INDIVIDUAL' | 'BUSINESS';
     recipientPhone?: string;
     recipientEmail?: string;
-
     beneficiaryName?: string;
     companyName?: string;
     transferReason?: string;
-
     currency: string;
     amount: number;
-  }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/wallet-transfer`, payload);
-  }
-  // GET pending transfers for user
-  getPendingTransfers(userId: string): Observable<Tx[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/pending?userId=${userId}`).pipe(
-      map((rows) =>
-        rows.map((tx) => ({
-          ...tx,
-          from: tx.fromAccount,
-          to: tx.toAccount,
-        }))
-      )
-    );
+  }): Observable<unknown> {
+    return this.http.post<unknown>(`${this.apiUrl}/wallet-transfer`, payload);
   }
 
-  acceptTransfer(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/accept`, {});
+  /* =========================
+   * ACTIONS
+   * ========================= */
+
+  acceptTransfer(id: number): Observable<unknown> {
+    return this.http.post<unknown>(`${this.apiUrl}/${id}/accept`, {});
   }
 
-  declineTransfer(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/decline`, {});
-  }
-  getPendingOutgoing(userId: number) {
-    return this.http.get<any[]>(`${this.apiUrl}/pending-outgoing?userId=${userId}`).pipe(
-      map((rows) =>
-        rows.map((tx) => ({
-          ...tx,
-          from: tx.fromAccount,
-          to: tx.toAccount,
-        }))
-      )
-    );
+  declineTransfer(id: number): Observable<unknown> {
+    return this.http.post<unknown>(`${this.apiUrl}/${id}/decline`, {});
   }
 
-  cancelTransfer(id: number) {
-    return this.http.post(`${this.apiUrl}/${id}/cancel`, {});
-  }
-  getTransactionById(id: string): Observable<Tx> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
-      map((tx) => ({
-        ...tx,
-        from: tx.fromAccount,
-        to: tx.toAccount,
-      }))
-    );
+  cancelTransfer(id: number): Observable<unknown> {
+    return this.http.post<unknown>(`${this.apiUrl}/${id}/cancel`, {});
   }
 }

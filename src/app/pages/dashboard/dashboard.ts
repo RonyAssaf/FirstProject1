@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Sidebar } from '@components/sidebar/sidebar';
 import { HeaderTransactions } from '@shared/header-transactions/header-transactions';
@@ -6,6 +6,8 @@ import { CurrentUserService } from 'src/app/core/servics/current-user.service';
 import { Tx } from '@components/transactions-row/transaction.interface';
 import { TransactionsService } from '../transactions/transactions.service';
 import { DecimalPipe, DatePipe, CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,67 +22,75 @@ export class Dashboard implements OnInit {
   // confirmation popup state
   confirmOpen = false;
   confirmAction: 'accept' | 'decline' | 'cancel' | null = null;
-
   selectedTx: Tx | null = null;
+
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private router: Router,
     private txService: TransactionsService,
-    private currentUser: CurrentUserService
+    private currentUser: CurrentUserService,
   ) {}
 
   ngOnInit(): void {
     this.loadPending();
   }
 
-  goToWalletTransfers() {
+  goToWalletTransfers(): void {
     this.router.navigate(['/transfers/wallet-transfer']);
   }
 
-  loadPending() {
-    const user = this.currentUser.getUser();
-    if (!user?.id) return;
+  /* ================= DATA LOADING ================= */
+
+  loadPending(): void {
+    const userId = this.getCurrentUserId();
+    if (!userId) return;
 
     this.loading = true;
-    this.txService.getPendingTransfers(user.id).subscribe({
-      next: (list) => {
-        this.pending = list;
-        this.loading = false;
-      },
-      error: () => {
-        this.pending = [];
-        this.loading = false;
-      },
-    });
+
+    // takeUntilDestroyed automatically unsubscribes from
+    //  observables when the component is destroyed, preventing memory
+    // leaks. It doesn’t change behavior, but it makes the component safer and more robust.
+    this.txService
+      .getPendingTransfers(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (list) => {
+          this.pending = list;
+          this.loading = false;
+        },
+        error: () => {
+          this.pending = [];
+          this.loading = false;
+        },
+      });
   }
 
-  // open confirm modal
-  ask(action: 'accept' | 'decline' | 'cancel', tx: Tx) {
+  private getCurrentUserId(): string | null {
+    return this.currentUser.getUser()?.id ?? null;
+  }
+
+  /* ================= CONFIRM MODAL ================= */
+
+  ask(action: 'accept' | 'decline' | 'cancel', tx: Tx): void {
     this.confirmOpen = true;
     this.confirmAction = action;
     this.selectedTx = tx;
   }
 
-  // close modal
-  cancelConfirm() {
+  cancelConfirm(): void {
     this.confirmOpen = false;
     this.confirmAction = null;
     this.selectedTx = null;
   }
 
-  // user clicked YES
-  confirmYes() {
+  confirmYes(): void {
     if (!this.selectedTx?.id || !this.confirmAction) return;
 
-    const id = this.selectedTx.id;
+    const request$ = this.getActionRequest(this.confirmAction, this.selectedTx.id);
+    if (!request$) return;
 
-    let req$: any;
-
-    if (this.confirmAction === 'accept') req$ = this.txService.acceptTransfer(id);
-    else if (this.confirmAction === 'decline') req$ = this.txService.declineTransfer(id);
-    else req$ = this.txService.cancelTransfer(id);
-
-    req$.subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.cancelConfirm();
         this.loadPending();
@@ -89,5 +99,19 @@ export class Dashboard implements OnInit {
         this.cancelConfirm();
       },
     });
+  }
+
+  private getActionRequest(
+    action: 'accept' | 'decline' | 'cancel',
+    txId: number,
+  ): Observable<unknown> {
+    switch (action) {
+      case 'accept':
+        return this.txService.acceptTransfer(txId);
+      case 'decline':
+        return this.txService.declineTransfer(txId);
+      case 'cancel':
+        return this.txService.cancelTransfer(txId);
+    }
   }
 }

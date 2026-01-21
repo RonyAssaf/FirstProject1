@@ -10,7 +10,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
-import { UserService, AuthUser } from 'src/app/core/servics/user.services';
+import { UserService } from 'src/app/core/servics/user.services';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +32,7 @@ export class Login {
     private fb: FormBuilder,
     private currentUser: CurrentUserService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
   ) {
     this.form = this.fb.group({
       email: this.fb.control('', [Validators.required, Validators.email]),
@@ -68,7 +68,7 @@ export class Login {
             id: res.user.id,
             email: res.user.email,
             phoneNumber: res.user.phoneNumber,
-          })
+          }),
         );
 
         this.currentUser.setUser({
