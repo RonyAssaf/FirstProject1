@@ -1,7 +1,7 @@
 import { Component, signal, output, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type TxStatus = 'Completed' | 'Pending' | 'Failed';
+export type TxStatus = 'COMPLETED' | 'PENDING' | 'FAILED';
 
 @Component({
   selector: 'app-currency-filter-popup',
@@ -28,13 +28,13 @@ export class CurrencyFilterPopup {
 
   toggleCurrency(currency: string) {
     this.selectedCurrencies.update((list) =>
-      list.includes(currency) ? list.filter((c) => c !== currency) : [...list, currency]
+      list.includes(currency) ? list.filter((c) => c !== currency) : [...list, currency],
     );
   }
 
   toggleStatus(status: TxStatus) {
     this.selectedStatuses.update((list) =>
-      list.includes(status) ? list.filter((s) => s !== status) : [...list, status]
+      list.includes(status) ? list.filter((s) => s !== status) : [...list, status],
     );
   }
 

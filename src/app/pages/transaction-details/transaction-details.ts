@@ -7,6 +7,7 @@ import { HeaderTransactions } from '../../shared/header-transactions/header-tran
 import { Tx } from '../../components/transactions-row/transaction.interface';
 
 import { TransactionsService } from '../transactions/transactions.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type DetailRow = {
   label: string;
@@ -33,7 +34,7 @@ export class TransactionDetails implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private txService: TransactionsService
+    private txService: TransactionsService,
   ) {}
 
   ngOnInit(): void {
@@ -58,22 +59,22 @@ export class TransactionDetails implements OnInit {
     this.errorMsg = null;
 
     this.txService.getTransactionById(id).subscribe({
-      next: (tx) => {
+      next: (tx: Tx) => {
         this.tx = tx;
         this.details = this.buildDetails(tx);
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Failed to load transaction:', err);
         this.loading = false;
 
-        // If API returns { message: "..."} from your GlobalExceptionHandler
-        const apiMsg = err?.error?.message || err?.error?.detail;
+        const httpErr = err as HttpErrorResponse;
+        const apiMsg = httpErr?.error?.message || httpErr?.error?.detail || httpErr?.message;
+
         this.errorMsg = apiMsg || 'Could not load transaction details.';
       },
     });
   }
-
   backToTransactions() {
     // keep your tableState restore logic (already stored in history.state)
     this.router.navigate(['/transactions'], {

@@ -14,25 +14,25 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <label class="label">Mobile Number</label>
 
-      <div class="phone-wrapper">
-        <intl-tel-input
-          #telInput
-          class="tel"
-          (numberChange)="handleNumberChange($event)"
-          (validityChange)="handleValidityChange($event)"
-          [initOptions]="{
-            initialCountry: 'lb',
-            formatAsYouType: true,
-            autoPlaceholder: 'aggressive',
-            strictMode: true
-          }"
-        ></intl-tel-input>
-      </div>
+      <!-- Reusable Phone Input Component:
+           - Includes PrimeNG p-select + input
+           - Loads countries from RestCountries
+           - Keeps +ISO inside input (compactDisplay true => +96170377444)
+           - Auto updates p-select based on typed +code
+           - Mobile-only validation + max length enforcement
+           - Emits E.164 to parent -->
+      <app-phone-input
+        [defaultIso]="'LB'"
+        [onlyMobile]="true"
+        [compactDisplay]="true"
+        (valueChange)="onPhoneValueChange($event)"
+        (validChange)="onPhoneValidChange($event)"
+      ></app-phone-input>
 
       <app-primary-button
         class="btn"
         label="Next"
-        [disabled]="form.invalid || !form.get('valid')?.value"
+        [disabled]="!form.get('valid')?.value || !phoneE164"
       ></app-primary-button>
     </form>
   </div>

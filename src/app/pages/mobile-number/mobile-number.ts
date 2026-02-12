@@ -1,30 +1,38 @@
+/* eslint-disable @angular-eslint/prefer-inject */
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 import { Header } from '../../core/header/header';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
-import { IntlTelInputComponent } from 'intl-tel-input/angularWithUtils';
-import 'intl-tel-input/styles';
 
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
 import { UserService } from 'src/app/core/servics/user.services';
 import { AuthService } from 'src/app/core/guards/AuthService';
 
+// ✅ Reusable component you’ll use in multiple pages
+import { PhoneInputComponent } from 'src/app/shared/phone-input/phone-input.component';
+
 @Component({
   selector: 'app-mobile-number',
   standalone: true,
-  imports: [CommonModule, Header, PrimaryButton, ReactiveFormsModule, IntlTelInputComponent],
+  imports: [CommonModule, Header, PrimaryButton, ReactiveFormsModule, PhoneInputComponent],
   templateUrl: './mobile-number.html',
   styleUrls: ['./mobile-number.scss'],
 })
 export class MobileNumber {
-  /** phone is handled by intl-tel-input */
-  private phoneNumber: string | null = null;
+  /**
+   * The final phone number in E.164 format coming from <app-phone-input>
+   * Example: "+96170377444"
+   */
+  phoneE164: string | null = null;
 
+  /**
+   * Keep your existing boolean validity logic (used to disable button)
+   */
   form = new FormGroup({
-    valid: new FormControl<boolean>(false),
+    valid: new FormControl<boolean>(false, { nonNullable: true }),
   });
 
   constructor(
@@ -34,60 +42,62 @@ export class MobileNumber {
     private authService: AuthService,
   ) {}
 
-  /** emitted by intl-tel-input */
-  handleNumberChange(event: unknown): void {
-    const e = event as any;
-
-    // event might be a string OR an object depending on the wrapper
-    const value =
-      (typeof e === 'string' ? e : null) ??
-      e?.number ??
-      e?.phoneNumber ??
-      e?.internationalNumber ??
-      e?.e164Number ??
-      e?.detail?.number ??
-      null;
-
-    this.phoneNumber = value;
+  /**
+   * Receives E.164 from the phone component
+   */
+  onPhoneValueChange(value: string | null): void {
+    this.phoneE164 = value;
   }
 
-  handleValidityChange(isValid: boolean): void {
-    this.form.patchValue({ valid: isValid });
+  /**
+   * Receives validity from the phone component
+   * (mobile-only + possible + valid-for-region)
+   */
+  onPhoneValidChange(isValid: boolean): void {
+    this.form.patchValue({ valid: isValid }, { emitEvent: false });
   }
 
+  /**
+   * Your existing flow: register -> auto-login -> store token -> navigate
+   */
   submit(): void {
     const user = this.currentUser.getUser();
 
-    if (!user?.email || !user?.password || !this.phoneNumber) {
+    // Must have email/password from previous step + valid phone
+    if (!user?.email || !user?.password || !this.phoneE164) {
       console.error('Missing registration data');
       return;
     }
 
-    const email = user.email; // ✅ now strictly string
-    const password = user.password; // ✅ now strictly string
+    const email = user.email;
+    const password = user.password;
 
     const registerPayload = {
       email,
       password,
-      phoneNumber: this.phoneNumber,
+      phoneNumber: this.phoneE164, // ✅ already E.164
     };
 
     this.userService.register(registerPayload).subscribe({
       next: (createdUser) => {
+        // store created user
         this.currentUser.setUser({
           id: createdUser.id,
           email: createdUser.email,
           phoneNumber: createdUser.phoneNumber,
         });
 
+        // auto login
         this.userService.login({ email, password }).subscribe({
           next: (res) => {
             this.authService.setToken(res.token);
+
             this.currentUser.setUser({
               id: res.user.id,
               email: res.user.email,
               phoneNumber: res.user.phoneNumber,
             });
+
             this.router.navigate(['/transactions']);
           },
           error: (err) => {

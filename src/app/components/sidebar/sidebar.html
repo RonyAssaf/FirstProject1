@@ -30,14 +30,15 @@
   <!-- FOOTER -->
   <div class="sidebar-footer">
     <div class="version">Version 1.1.9-develop</div>
-
-    <div class="sidebar-profile">
-      <img src="https://i.pravatar.cc/60" class="profile-avatar" />
-      <div class="profile-info">
-        <div class="profile-name">{{ userName() }}</div>
-        <div class="profile-handle">{{ userHandle() }}</div>
+    <button class="logout-btn" type="button" (click)="logout()">
+      <div class="sidebar-profile">
+        <img src="https://i.pravatar.cc/60" class="profile-avatar" />
+        <div class="profile-info">
+          <div class="profile-name">{{ userName() }}</div>
+          <div class="profile-handle">{{ userHandle() }}</div>
+        </div>
       </div>
-    </div>
+    </button>
   </div>
 </div>
 <div class="support-btn"><i class="pi pi-headphones"></i></div>

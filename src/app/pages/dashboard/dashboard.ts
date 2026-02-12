@@ -103,7 +103,7 @@ export class Dashboard implements OnInit {
 
   private getActionRequest(
     action: 'accept' | 'decline' | 'cancel',
-    txId: number,
+    txId: string,
   ): Observable<unknown> {
     switch (action) {
       case 'accept':

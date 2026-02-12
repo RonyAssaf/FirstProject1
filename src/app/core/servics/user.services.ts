@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 /* =====================
  * TYPES
  * ===================== */
+
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+}
 
 export interface RegisterPayload {
   email: string;
@@ -43,11 +49,15 @@ export class UserService {
    * ===================== */
 
   register(payload: RegisterPayload): Observable<AuthUser> {
-    return this.http.post<AuthUser>(`${this.usersUrl}/register`, payload);
+    return this.http
+      .post<ApiResponse<AuthUser>>(`${this.usersUrl}/register`, payload)
+      .pipe(map((res) => res.data));
   }
 
   login(payload: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.authUrl}/login`, payload);
+    return this.http
+      .post<ApiResponse<AuthResponse>>(`${this.authUrl}/login`, payload)
+      .pipe(map((res) => res.data));
   }
 
   /* =====================
@@ -56,11 +66,15 @@ export class UserService {
 
   lookupByPhone(phone: string): Observable<UserLookupResponse> {
     const params = new HttpParams().set('phone', phone);
-    return this.http.get<UserLookupResponse>(`${this.usersUrl}/lookup`, { params });
+    return this.http
+      .get<ApiResponse<UserLookupResponse>>(`${this.usersUrl}/lookup`, { params })
+      .pipe(map((res) => res.data));
   }
 
   lookupByEmail(email: string): Observable<UserLookupResponse> {
     const params = new HttpParams().set('email', email);
-    return this.http.get<UserLookupResponse>(`${this.usersUrl}/lookup`, { params });
+    return this.http
+      .get<ApiResponse<UserLookupResponse>>(`${this.usersUrl}/lookup`, { params })
+      .pipe(map((res) => res.data));
   }
 }

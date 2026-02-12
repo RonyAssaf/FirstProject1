@@ -46,43 +46,45 @@
     </div>
 
     @if (form.controls.recipientType.value === 'individual') {
-    <div class="field">
-      <label>Beneficiary Mobile Number</label>
-      <div class="phone-wrapper">
-        <intl-tel-input
-          class="tel"
-          (numberChange)="handleNumberChange($event)"
-          (validityChange)="handleValidityChange($event)"
-          [initOptions]="{
-            initialCountry: 'lb',
-            formatAsYouType: true,
-            autoPlaceholder: 'aggressive',
-            strictMode: true
-          }"
-        ></intl-tel-input>
+      <div class="field">
+        <label>Beneficiary Mobile Number</label>
+        <div class="phone-wrapper">
+          <!-- ✅ google-libphonenumber + PrimeNG select (reusable) -->
+          <app-phone-input
+            [defaultIso]="'LB'"
+            [onlyMobile]="true"
+            [compactDisplay]="true"
+            (valueChange)="handleNumberChange($event)"
+            (validChange)="handleValidityChange($event)"
+          ></app-phone-input>
+        </div>
       </div>
-    </div>
 
-    <div class="field">
-      <label> Beneficiary Name @if (phoneLookupError) { } </label>
+      <div class="field">
+        <label>
+          Beneficiary Name
+          @if (phoneLookupError) {}
+        </label>
 
-      <input type="text" formControlName="beneficiaryName" />
-      <span class="field-error">{{ phoneLookupError }}</span>
-    </div>
-    } @if (form.controls.recipientType.value === 'business') {
-    <div class="field">
-      <label>Email</label>
-      <input type="email" placeholder="example@company.com" formControlName="email" />
-    </div>
+        <input type="text" formControlName="beneficiaryName" />
+        <span class="field-error">{{ phoneLookupError }}</span>
+      </div>
+    }
+    @if (form.controls.recipientType.value === 'business') {
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="example@company.com" formControlName="email" />
+      </div>
 
-    <div class="field">
-      <label>
-        Company Name @if (emailLookupError) {
-        <span class="field-error">{{ emailLookupError }}</span>
-        }
-      </label>
-      <input type="text" formControlName="companyName" />
-    </div>
+      <div class="field">
+        <label>
+          Company Name
+          @if (emailLookupError) {
+            <span class="field-error">{{ emailLookupError }}</span>
+          }
+        </label>
+        <input type="text" formControlName="companyName" />
+      </div>
     }
 
     <div class="field">

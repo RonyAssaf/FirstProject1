@@ -2,10 +2,11 @@ import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
 import { TransactionsTable } from '../../components/transactions-table/transactions-table';
 import { HeaderTransactions } from '../../shared/header-transactions/header-transactions';
-import { Tx } from '../../components/transactions-row/transaction.interface';
 import { TransactionsService } from './transactions.service';
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { Tx } from '../../components/transactions-row/transaction.interface';
 
 @Component({
   selector: 'app-transactions',
@@ -34,8 +35,8 @@ export class Transactions implements OnInit {
       .getTransactions(userId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => (this.transactions = data),
-        error: (err) => console.error('Failed to load transactions', err),
+        next: (data: Tx[]) => (this.transactions = data),
+        error: (err: unknown) => console.error('Failed to load transactions', err),
       });
   }
 
