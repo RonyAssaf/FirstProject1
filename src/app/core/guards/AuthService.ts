@@ -1,34 +1,34 @@
-import { Injectable, signal } from '@angular/core';
-import { AuthUser } from '../servics/current-user.service';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly STORAGE_KEY = 'auth_user';
+  // Single source of truth for auth
+  private readonly TOKEN_KEY = 'token';
+  private readonly CURRENT_USER_KEY = 'current_user';
+  private readonly AUTH_USER_KEY = 'auth_user'; // legacy key, optional cleanup
 
-  user = signal<AuthUser | null>(null);
-
-  constructor() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored) {
-      this.user.set(JSON.parse(stored));
-    }
-  }
-
-  setUser(user: AuthUser) {
-    this.user.set(user);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
-  }
-
-  getUser() {
-    return this.user();
-  }
-
-  logout() {
-    this.user.set(null);
-    localStorage.removeItem(this.STORAGE_KEY);
-  }
-
+  /** Logged in = token exists */
   isLoggedIn(): boolean {
-    return !!this.user();
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return typeof token === 'string' && token.length > 0;
+  }
+
+  /** Returns the raw token (useful for interceptors if you want) */
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  /** Save token (call after login) */
+  setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  /** Clear token + stored user objects */
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+
+    // also clean user storage keys so state is consistent
+    localStorage.removeItem(this.CURRENT_USER_KEY);
+    localStorage.removeItem(this.AUTH_USER_KEY);
   }
 }

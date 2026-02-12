@@ -1,10 +1,12 @@
 import { Injectable, signal } from '@angular/core';
+
 export interface CurrentUser {
   email: string;
   password?: string;
   phoneNumber?: string;
   id?: string;
 }
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -15,30 +17,41 @@ export interface AuthUser {
 export class CurrentUserService {
   private readonly STORAGE_KEY = 'current_user';
 
-  user = signal<CurrentUser | null>(null);
+  readonly user = signal<CurrentUser | null>(null);
 
   constructor() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored) {
-      this.user.set(JSON.parse(stored));
-    }
+    const stored = this.readFromStorage<CurrentUser>(this.STORAGE_KEY);
+    if (stored) this.user.set(stored);
   }
 
-  setUser(partial: Partial<CurrentUser>) {
+  setUser(partial: Partial<CurrentUser>): void {
     const current = this.user();
-    const updated = { ...current, ...partial } as CurrentUser;
-    //It merges updates (step 1 sets email, step 2 sets phone, etc.) then saves to storage.
+
+    // If there's no current user yet, start from an empty object
+    const base: CurrentUser = current ?? ({} as CurrentUser);
+
+    const updated: CurrentUser = { ...base, ...partial };
 
     this.user.set(updated);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
   }
 
-  getUser() {
+  getUser(): CurrentUser | null {
     return this.user();
   }
 
-  clear() {
+  clear(): void {
     this.user.set(null);
     localStorage.removeItem(this.STORAGE_KEY);
+  }
+
+  private readFromStorage<T>(key: string): T | null {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return null;
+    }
   }
 }

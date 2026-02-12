@@ -3,16 +3,16 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Router } from '@angular/router';
 
-import { IntlTelInputComponent } from 'intl-tel-input/angularWithUtils';
-import 'intl-tel-input/styles';
-
 import { catchError, debounceTime, distinctUntilChanged, of } from 'rxjs';
 import { UserService } from 'src/app/core/servics/user.services';
+
+// ✅ replace intl-tel-input with your reusable component
+import { PhoneInputComponent } from 'src/app/shared/phone-input/phone-input.component';
 
 @Component({
   selector: 'app-send-wallet-transfer',
   standalone: true,
-  imports: [ReactiveFormsModule, RadioButtonModule, IntlTelInputComponent],
+  imports: [ReactiveFormsModule, RadioButtonModule, PhoneInputComponent],
   templateUrl: './send-wallet-transfer.html',
   styleUrl: './send-wallet-transfer.scss',
 })
@@ -39,8 +39,11 @@ export class SendWalletTransfer {
     reason: new FormControl<string | null>(null),
   });
 
-  constructor(private router: Router, private userService: UserService) {
-    // toggle reset
+  constructor(
+    private router: Router,
+    private userService: UserService,
+  ) {
+    // toggle reset (UNCHANGED)
     this.form.controls.recipientType.valueChanges.subscribe((type) => {
       this.phoneLookupError = null;
       this.emailLookupError = null;
@@ -61,7 +64,7 @@ export class SendWalletTransfer {
       this.form.updateValueAndValidity();
     });
 
-    // ✅ Business email lookup: as user types email
+    // ✅ Business email lookup (UNCHANGED)
     this.form.controls.email.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((email) => {
@@ -90,20 +93,17 @@ export class SendWalletTransfer {
       });
   }
 
-  handleNumberChange(event: any) {
-    const phoneNumber =
-      (typeof event === 'string' ? event : null) ??
-      event?.number ??
-      event?.phoneNumber ??
-      event?.internationalNumber ??
-      event?.e164Number ??
-      event?.detail?.number ??
-      null;
-
+  /**
+   * ✅ Same function name as before, but now receives E.164 directly
+   * from <app-phone-input> (valueChange).
+   *
+   * Example: "+96170377444"
+   */
+  handleNumberChange(phoneNumber: string | null) {
     this.selectedPhone = phoneNumber;
 
-    // ✅ only lookup when phone is valid
-    if (this.form.controls.phoneValid.value) {
+    // ✅ keep same behavior: only lookup when phone is valid
+    if (this.form.controls.phoneValid.value && phoneNumber) {
       this.form.controls.phone.setValue(phoneNumber);
       this.lookupPhoneAndFillName(phoneNumber);
     } else {
@@ -112,16 +112,21 @@ export class SendWalletTransfer {
     }
   }
 
+  /**
+   * ✅ Same function name as before, now receives boolean from (validChange)
+   */
   handleValidityChange(isValid: boolean) {
     this.form.controls.phoneValid.setValue(isValid);
     this.form.updateValueAndValidity();
 
-    // if invalid => clear error + name
     if (!isValid) {
       this.phoneLookupError = null;
       this.form.controls.beneficiaryName.setValue(null);
-    } else if (isValid && this.selectedPhone) {
-      // if it becomes valid, lookup immediately
+      return;
+    }
+
+    // if it becomes valid, lookup immediately (same logic)
+    if (isValid && this.selectedPhone) {
       this.lookupPhoneAndFillName(this.selectedPhone);
     }
   }
@@ -151,7 +156,7 @@ export class SendWalletTransfer {
       });
   }
 
-  /** FINAL VALIDATION */
+  /** FINAL VALIDATION (UNCHANGED) */
   get canContinue(): boolean {
     const v = this.form.value;
 

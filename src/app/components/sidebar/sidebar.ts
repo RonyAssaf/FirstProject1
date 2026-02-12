@@ -1,5 +1,6 @@
 import { Component, computed } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/core/guards/AuthService';
 import { CurrentUserService } from 'src/app/core/servics/current-user.service';
 
 @Component({
@@ -10,7 +11,11 @@ import { CurrentUserService } from 'src/app/core/servics/current-user.service';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  constructor(private currentUserService: CurrentUserService) {}
+  constructor(
+    private currentUserService: CurrentUserService,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   // reactive signals for name and handle
   userName = computed(() => {
@@ -22,6 +27,12 @@ export class Sidebar {
 
   userHandle = computed(() => {
     const user = this.currentUserService.user();
-    return user?.email ?? 'haysam'; // show full email
+    return user?.email ?? 'haysam';
   });
+
+  logout(): void {
+    this.authService.logout();
+    this.currentUserService.clear(); // optional but recommended (keeps signals clean)
+    this.router.navigate(['/login']);
+  }
 }

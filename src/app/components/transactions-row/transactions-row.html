@@ -1,7 +1,7 @@
 <td class="id">{{ tx.id }}</td>
 
 <td class="date">
-  {{ tx.date | date : 'dd MMM' }}
+  {{ tx.date | date: 'dd MMM' }}
 </td>
 
 <td class="from">{{ tx.from }}</td>
@@ -13,9 +13,9 @@
   <span
     class="badge"
     [ngClass]="{
-      completed: tx.status === 'Completed',
-      pending: tx.status === 'Pending',
-      failed: tx.status === 'Failed'
+      completed: tx.status === 'COMPLETED',
+      pending: tx.status === 'PENDING',
+      failed: tx.status === 'FAILED',
     }"
   >
     <i class="pi pi-circle-fill"></i>
@@ -30,11 +30,11 @@
   /></span>
 </td>
 <td class="amount" [class.positive]="tx.total > 0" [class.negative]="tx.total < 0">
-  {{ tx.total | number : '1.2-2' }}
+  {{ tx.total | number: '1.2-2' }}
 </td>
 
 <td class="amount" [class.positive]="tx.amount > 0" [class.negative]="tx.amount < 0">
-  {{ tx.amount | number : '1.2-2' }}
+  {{ tx.amount | number: '1.2-2' }}
 </td>
 
-<td class="fee">{{ tx.fee | number : '1.2-2' }}</td>
+<td class="fee">{{ tx.fee | number: '1.2-2' }}</td>

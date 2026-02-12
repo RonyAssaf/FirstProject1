@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { PrimaryButton } from '../../shared/primary-button/primary-button';
-import { Header } from '../../shared/header/header';
+import { Header } from '../../core/header/header';
 import { Disclaimer } from '../../shared/disclaimer/disclaimer';
 import { EmailInput } from '../../shared/email-input/email-input';
 import { Router, RouterModule } from '@angular/router';

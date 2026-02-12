@@ -1,60 +1,56 @@
+/* Page layout */
 .create-page {
+  min-height: calc(100vh - 64px);
   display: flex;
   justify-content: center;
-  padding: 40px;
+  align-items: flex-start;
+  padding: 64px 24px;
 
   &__container {
-    max-width: 420px;
     width: 100%;
+    max-width: 520px;
     text-align: center;
   }
 
   &__logo {
-    width: 48px;
-    height: 48px;
-    background: #000;
-    color: #fff;
+    width: 44px;
+    height: 44px;
     border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 20px;
-    font-size: 22px;
+    background: #111;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 16px;
+    font-size: 18px;
+    font-weight: 700;
   }
 
   &__title {
-    margin-bottom: 6px;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 12px;
   }
 
   &__subtitle {
-    color: #555;
-    margin-bottom: 20px;
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 26px;
   }
 }
 
+/* Label above the reusable phone component */
 .label {
   display: block;
   text-align: left;
-  font-size: 14px;
-  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px;
 }
 
-.phone-wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  height: 48px;
-  margin-bottom: 10px;
-}
-
-.tel {
-  width: 100%;
-}
-// iti iti--allow-dropdown iti--show-flags iti--inline-dropdown
-::ng-deep .phone-wrapper .tel .iti__tel-input {
-  height: 45px !important;
-  width: 415px !important;
-  position: relative;
-  display: inline-block;
-  border-radius: 6px;
+/* Button spacing */
+.btn {
+  display: block;
+  margin-top: 12px;
 }

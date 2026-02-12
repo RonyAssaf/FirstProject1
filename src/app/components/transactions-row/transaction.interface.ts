@@ -1,11 +1,11 @@
 export interface Tx {
-  id: number;
+  id: string;
   date: Date;
   userId: number;
   from: string;
   to: string;
   type: string;
-  status: 'Completed' | 'Pending' | 'Failed';
+  status: 'COMPLETED' | 'PENDING' | 'FAILED';
   currency: string;
   total: number;
   amount: number;
